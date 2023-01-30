@@ -48,22 +48,13 @@ from sklearn import metrics  # Pour évaluer les modèles
 
 # Plant Spy AI Deep Learning Models :
 
-model_categorie = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_LeNet1_Categorie_AllData_Softmax')
-
-
-model_healthy = tf.keras.models.load_model("/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_isHealthy_18K")
-
-model_maladieTomato = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Tomate_avecHealthy_softmax')
-model_maladiePotato = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Potato1_avecHealthy')
-model_maladieCorn = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Corn_Healthy')
-model_maladieApple = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Apple_Healthy')
-model_maladieGrape = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Grape1_Healthy')
+model_categorie = tf.keras.models.load_model('./Models/model_LeNet1_Categorie_AllData_Softmax')
+model_healthy = tf.keras.models.load_model("./Models/model_isHealthy_18K")
+model_maladieTomato = tf.keras.models.load_model('./Models/model_Tomate_avecHealthy_softmax')
+model_maladiePotato = tf.keras.models.load_model('./Models/model_Potato1_avecHealthy')
+model_maladieCorn   = tf.keras.models.load_model('./Models/model_Corn_Healthy')
+model_maladieApple  = tf.keras.models.load_model('./Models/model_Apple_Healthy')
+model_maladieGrape  = tf.keras.models.load_model('./Models/model_Grape1_Healthy')
 
 ########################################################################################
 
@@ -169,21 +160,21 @@ def predict_df(X):
     ########################################################################################
     # afficher "level" nombres d'images : /Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test
 test_images = [
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleCedarRust1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleCedarRust4.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleScab1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleScab3.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust2.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust3.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight4.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoHealthy2.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoEarlyBlight1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoHealthy1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoYellowCurlVirus1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoHealthy4.JPG'
+    './Models/NewPlantDiseasesDataset/test/test/AppleCedarRust1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/AppleCedarRust4.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/AppleScab1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/AppleScab3.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/CornCommonRust1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/CornCommonRust2.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/CornCommonRust3.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight4.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/PotatoHealthy2.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoEarlyBlight1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoHealthy1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoYellowCurlVirus1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoHealthy4.JPG'
 ]
 list_names = ["Apple-CedarRust", "Apple-CedarRust", "Apple-Scab", "Apple-Scab", "Corn-CommonRust",
               "Corn-CommonRust ", "Corn-CommonRust",
