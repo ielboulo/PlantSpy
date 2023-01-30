@@ -7,21 +7,21 @@ import numpy as np
 from PlantSpyModels import predict, test_images, list_names
 
 test_images = [
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleCedarRust1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleCedarRust4.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleScab1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleScab3.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust2.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust3.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight4.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoHealthy2.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoEarlyBlight1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoHealthy1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoYellowCurlVirus1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoHealthy4.JPG'
+    './Models/NewPlantDiseasesDataset/test/test/AppleCedarRust1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/AppleCedarRust4.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/AppleScab1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/AppleScab3.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/CornCommonRust1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/CornCommonRust2.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/CornCommonRust3.JPG',
+    './ModelsNewPlantDiseasesDataset/test/test/PotatoEarlyBlight1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight4.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/PotatoHealthy2.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoEarlyBlight1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoHealthy1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoYellowCurlVirus1.JPG',
+    './Models/NewPlantDiseasesDataset/test/test/TomatoHealthy4.JPG'
 ]
 
 
