@@ -1,49 +1,5 @@
-
-import streamlit as st
-import inspect
-import textwrap
-import time
-import numpy as np
-from utils import show_code
-
-import streamlit as st
 import pandas as pd
-from keras.preprocessing.image import load_img
-from tempfile import NamedTemporaryFile
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import cv2
 import tensorflow as tf
-import os
-import pathlib
-from PIL import Image
-import seaborn as sns
-import plotly.express as px
-from sklearn.model_selection import train_test_split
-import random
-# %matplotlib inline
-
-from matplotlib import cm
-from imblearn.under_sampling import RandomUnderSampler
-
-from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.layers import Flatten
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import MaxPooling2D
-from tensorflow.keras.layers import GlobalAveragePooling2D
-from tensorflow.keras.utils import to_categorical
-from keras.preprocessing.image import ImageDataGenerator
-
-from tensorflow.keras import Sequential
-from tensorflow.keras import callbacks
-
-from tensorflow.keras.applications.vgg16 import VGG16
-
-from sklearn import metrics  # Pour évaluer les modèles
-
 
 
 # Plant Spy AI Deep Learning Models :
