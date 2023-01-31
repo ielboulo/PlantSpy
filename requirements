@@ -1,7 +1,7 @@
 Python 3.6
-opencv-python	4.6.0.66	
+opencv-python	4.6.0.66	(lib cv2)
 tensorflow	2.6.2	
 numpy 1.22.4
 pandas 1.4.2
-altair 4.2.0
-pydeck 0.7.1
+Pillow	8.4.0	(lib PIL)
+keras	2.6.0	
