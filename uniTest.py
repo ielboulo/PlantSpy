@@ -4,7 +4,7 @@ import os
 import cv2
 
 import numpy as np
-from PlantSpyModels import predict, test_images, list_names
+from PlantSpyModels import predict
 
 test_images = [
     './Models/NewPlantDiseasesDataset/test/test/AppleCedarRust1.JPG',
