@@ -3,15 +3,16 @@ PlantSpy is an AI tool (Deep Learning) allowing to detect the category of a plan
 
 
 
-Pour utiliser les modèle de prediction, il suffit de :
+Pour utiliser les modèles de prediction, il suffit de :
 
 1- Fournir une image au script python  
 
-2- Appliquer la mise en forme nécessaire (resize à 100x100, mise en plance en array)
+2- Appliquer la mise en forme nécessaire (resize à 100x100, mise en place en array)
 
-3- Appeler le fontion "Predict()" qui prend en argument l'image
+3- Appeler la fonction "Predict()" qui prend en argument l'image
 
-En sortie, le système fournit sa prédiction comme suit : nom_de_catégorie_de_plante + intervalle de confiance de cette prediction en % + 
+En sortie, le système fournit sa prédiction comme suit : 
+nom_de_catégorie_de_plante + intervalle de confiance de prediction en % + [Healthy ou nom_maladie] + intervalle de confiance de prediction en %
 
 
 **Example** :
