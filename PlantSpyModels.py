@@ -1,69 +1,32 @@
-
-import streamlit as st
-import inspect
-import textwrap
-import time
-import numpy as np
-from utils import show_code
-
-import streamlit as st
 import pandas as pd
-from keras.preprocessing.image import load_img
-from tempfile import NamedTemporaryFile
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-import cv2
 import tensorflow as tf
-import os
-import pathlib
+import cv2
+import urllib
+import numpy as np 
+from urllib.request import urlopen, urlretrieve
 from PIL import Image
-import seaborn as sns
-import plotly.express as px
-from sklearn.model_selection import train_test_split
-import random
-# %matplotlib inline
 
-from matplotlib import cm
-from imblearn.under_sampling import RandomUnderSampler
-
-from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.layers import Flatten
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import MaxPooling2D
-from tensorflow.keras.layers import GlobalAveragePooling2D
-from tensorflow.keras.utils import to_categorical
-from keras.preprocessing.image import ImageDataGenerator
-
-from tensorflow.keras import Sequential
-from tensorflow.keras import callbacks
-
-from tensorflow.keras.applications.vgg16 import VGG16
-
-from sklearn import metrics  # Pour évaluer les modèles
 
 
 
 # Plant Spy AI Deep Learning Models :
 
 model_categorie = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_LeNet1_Categorie_AllData_Softmax')
+    'models/model_LeNet1_Categorie_AllData_Softmax')
 
 
-model_healthy = tf.keras.models.load_model("/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_isHealthy_18K")
+model_healthy = tf.keras.models.load_model("models/model_isHealthy_18K")
 
 model_maladieTomato = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Tomate_avecHealthy_softmax')
+    'models/model_Tomate_avecHealthy_softmax')
 model_maladiePotato = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Potato1_avecHealthy')
+    'models/model_Potato1_avecHealthy')
 model_maladieCorn = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Corn_Healthy')
+    'models/model_Corn_Healthy')
 model_maladieApple = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Apple_Healthy')
+    'models/model_Apple_Healthy')
 model_maladieGrape = tf.keras.models.load_model(
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/model_Grape1_Healthy')
+    'models/model_Grape1_Healthy')
 
 ########################################################################################
 
@@ -95,7 +58,6 @@ dict_maladie_Tomato1 = {0: 'Bacterial_spot',
                         7: 'Tomato_Yellow_Leaf_Curl_Virus',
                         8: 'Tomato_mosaic_virus',
                         9: 'healthy'}
-
 # APPLE
 
 dict_maladie_Apple1 = {0: 'Apple_scab',
@@ -114,7 +76,20 @@ dict_maladie_Corn1 = {2: 'Northern_Leaf_Blight',
 ########################################################################################
 
 def pred_categorie(X):
+    X = img_process(X)
+    print('Dans pred categorie avec X = ',X)
     predict_categorie = model_categorie.predict(X)
+    print('predict_categorie',predict_categorie)
+    predict_categorie_class = predict_categorie.argmax(axis=1)
+    prediction = (pd.DataFrame(predict_categorie_class, columns=['categorie'])).replace({"categorie": dict_categorie})
+    prediction['confiance_categorie'] = predict_categorie.max(axis=1)
+    return prediction.to_dict()
+
+def pred_categorie2(X):
+    X = img_process(X)
+    print('Dans pred categorie avec X = ',X)
+    predict_categorie = model_categorie.predict(X)
+    print('predict_categorie',predict_categorie)
     predict_categorie_class = predict_categorie.argmax(axis=1)
     prediction = (pd.DataFrame(predict_categorie_class, columns=['categorie'])).replace({"categorie": dict_categorie})
     prediction['confiance_categorie'] = predict_categorie.max(axis=1)
@@ -131,6 +106,7 @@ def pred_TypeMaladie(X, modele, dictionnaire):
 
 
 def pred_healthy(X):
+    X = img_process(X)
     pred_healthy = model_healthy.predict(X)
     prediction = pd.DataFrame(pred_healthy.round(), columns=['maladie_pred']).astype('int')
     prediction['confiance'] = pred_healthy.max(axis=1) * prediction['maladie_pred'] + (
@@ -140,7 +116,8 @@ def pred_healthy(X):
 
 
 def predict(X):
-    pred1 = pred_categorie(X)
+    X = img_process(X)
+    pred1 = pred_categorie2(X)
     if pred1['categorie'][0] == "Tomato":
         pred2 = pred_TypeMaladie(X, model_maladieTomato, dict_maladie_Tomato1)
     elif pred1['categorie'][0] == "Potato":
@@ -155,7 +132,7 @@ def predict(X):
         pred2 = pred_healthy(X)
 
     pred = pd.concat([pred1, pred2], axis=1)
-    return pred
+    return pred.to_dict()
 
 
 def predict_df(X):
@@ -163,27 +140,59 @@ def predict_df(X):
     for i in range(0, len(X)):
         res.append(predict(X.iloc[i, 0]))
 
+def preprocessing(image):
+    image = image.resize((100, 100))
+    image = np.array(image)
+    image = image / 255.0
+    image = np.expand_dims(image, axis=0)
+    return image
+
+def img_process(image):
+    print('image = ',image)
+    try:
+        # resp = urlopen(image)
+        # image = np.asarray(bytearray(resp.read()), dtype="uint8")
+        im = 'test.jpg'
+        fd = urllib.request.urlretrieve(image, im)
+        image = Image.open(im) 
+        image = image.convert('RGB')
+        print('image 2  = ',image)
+        # img = cv2.imread(image, cv2.IMREAD_COLOR)
+        # img = np.asarray(Image.open('2007_000032.png'))
+        # print(img)
+        img_resized = image.resize((100, 100))
+        print('img_resized = ',img_resized)
+        image = np.array(img_resized)
+        image = image / 255.0
+        print('img shape = ',image.shape)
+        image = np.expand_dims(image, axis=0)
+        return image
+        
+    except Exception as e:
+        print('Attention erreur exception : ----------',str(e))
+        # return e
+    return image
     ########################################################################################
 
 
     ########################################################################################
-    # afficher "level" nombres d'images : /Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test
+    # afficher "level" nombres d'images : models/NewPlantDiseasesDataset/test/test
 test_images = [
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleCedarRust1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleCedarRust4.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleScab1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/AppleScab3.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust2.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/CornCommonRust3.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight4.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/PotatoHealthy2.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoEarlyBlight1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoHealthy1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoYellowCurlVirus1.JPG',
-    '/Users/ilham_elbouloumi/PycharmProjects/pythonProject1/NewPlantDiseasesDataset/test/test/TomatoHealthy4.JPG'
+    'models/NewPlantDiseasesDataset/test/test/AppleCedarRust1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/AppleCedarRust4.JPG',
+    'models/NewPlantDiseasesDataset/test/test/AppleScab1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/AppleScab3.JPG',
+    'models/NewPlantDiseasesDataset/test/test/CornCommonRust1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/CornCommonRust2.JPG',
+    'models/NewPlantDiseasesDataset/test/test/CornCommonRust3.JPG',
+    'models/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight4.JPG',
+    'models/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/PotatoHealthy2.JPG',
+    'models/NewPlantDiseasesDataset/test/test/TomatoEarlyBlight1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/TomatoHealthy1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/TomatoYellowCurlVirus1.JPG',
+    'models/NewPlantDiseasesDataset/test/test/TomatoHealthy4.JPG'
 ]
 list_names = ["Apple-CedarRust", "Apple-CedarRust", "Apple-Scab", "Apple-Scab", "Corn-CommonRust",
               "Corn-CommonRust ", "Corn-CommonRust",

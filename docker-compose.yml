@@ -1,0 +1,19 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+  
+  test_plantspy:
+    image: test_plantspy:latest
+    container_name: test_plantspy
+    ports:
+      - "8000:8000"
+    build:
+      context: .
+      dockerfile: Dockerfile_plantspy
+    depends_on:
+      - mongo
+
+  

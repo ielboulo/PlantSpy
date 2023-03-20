@@ -1,0 +1,17 @@
+tensorflow	
+numpy
+pandas
+pillow
+keras
+requests	
+fastapi
+python-multipart
+starlette
+passlib
+pydantic
+python-jose
+typing
+jwt
+pymongo
+requests
+uvicorn
