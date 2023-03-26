@@ -1,7 +1,9 @@
-from fastapi import FastAPI, HTTPException, Header, Depends
+from fastapi import FastAPI, HTTPException, Header, Depends,UploadFile
 from pydantic import BaseModel
 import PlantSpyModels as plant
 import jwt
+import io
+from PIL import Image
 import pymongo
 import uvicorn
 from authenticate import *
@@ -67,7 +69,7 @@ class User(BaseModel):
 
 
 
-@app.post("/token", response_model=Token)
+@app.post("/token", response_model=Token, tags=["Login via Oauth2"])
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user_db = collection.find_one({"username":form_data.username})
     print('requete user',user_db)
@@ -84,8 +86,16 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-# Route pour la prédiction du type de plante
-@app.get("/prediction_plante", tags=['Prediction type de Plantes'])
+
+# Route pour verifier le statut de l'API
+@app.get("/Healthcheck", 
+         tags=["Statut"], 
+         name="Permet de vérifier l'état de l'API")
+async def get_health():
+    return {"status": "OK"}
+
+# Route pour la prédiction du type de plante via url
+@app.get("/prediction_plante_url", tags=['Prediction type de Plantes via url'])
 
 async def prediction_plante(url: str):
     """ A partir de l'URL on prédit le type de plante
@@ -93,20 +103,58 @@ async def prediction_plante(url: str):
     reponse = plant.pred_categorie(url)
     return reponse
 
-# Route pour la prédiction de la santé de la plante
-@app.get("/prediction_sante", tags=['Prediction Santé de la Plante'])
+# Route pour la prédiction du type de plante via url
+@app.post("/prediction_plante_file",
+           tags=['Prediction type de Plantes via un fichier'], 
+           name="Permet de connaître la catégorie de la plante")
+async def predict_categorie(file: UploadFile):
+    
+    image = Image.open(io.BytesIO(await file.read()))
+    #check_access(user_validation["access_level"], "user")
+    image = plant.preprocessing(image)
+    prediction = plant.pred_categorie_file(image)
+   
+    return {"prediction": prediction}
+
+# Route pour la prédiction de la santé de la plante via une url
+@app.get("/prediction_sante_url", tags=['Prediction Santé de la Plante via url'])
 async def prediction_sante(url: str, token: str = Depends(oauth2_scheme)):
     reponse = plant.pred_healthy(url)
     return reponse
 
-# Route pour la prédiction de la maladie de la plante
-@app.get("/prediction_maladie", tags=['Prediction maladie de la Plante'])
+# Route pour la prédiction de la santé de la plante via un fichier
+@app.post("prediction_sante_file", tags=["Prediction Santé de la Plante via un fichier"], name="Permet de savoir si la plante est malade ou non")
+async def predict_healthy(file: UploadFile):
+    
+    image = Image.open(io.BytesIO(await file.read()))
+    #check_access(user_validation["access_level"], "user")
+    image = plant.preprocessing(image)
+    prediction = plant.pred_healthy_file(image)
+   
+    return {"prediction": prediction}
+
+# Route pour la prédiction de la maladie de la plante via une url
+@app.get("/prediction_maladie_url", tags=['Prediction de la Maladie de la Plante via une url'])
 
 async def prediction_maladie(url: str):
     """ A partir de l'URL on prédit le type de plante
     """
     reponse = plant.predict(url)
     return reponse
+
+
+# Route pour la prédiction de la maladie de la plante via une url
+@app.post("/prediction_maladie_file", 
+          tags=["Prediction de la Maladie de la Plante via un fichier"], 
+          name="Permet de connaître la catégorie de la plante et le nom de la maladie si elle est connue")
+async def predict_TypeMaladie(file: UploadFile):
+    
+    image = Image.open(io.BytesIO(await file.read()))
+    #check_access(user_validation["access_level"], "user")
+    image = plant.preprocessing(image)
+    prediction = plant.predict_file(image)
+    
+    return {"prediction": prediction}
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
