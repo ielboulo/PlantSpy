@@ -89,7 +89,7 @@ class TestImage(unittest.TestCase):
     def test_image_prediction(self):
         # for i in range(0, level):
         with open(test_images[0], 'rb') as file:
-            img = cv2.imread(file, cv2.IMREAD_COLOR)
+            img = cv2.imread(test_images[0], cv2.IMREAD_COLOR)
             img_resized = cv2.resize(img, (100, 100))
 
             X_test = []
