@@ -29,15 +29,15 @@ class TestImage(unittest.TestCase):
     def test_is_good_extension(self):
         # Charger l'image de test
         image_test = test_images[0]
-        print("iel  image = " + image_test)
+        #print("iel  image = " + image_test)
         name, extension = os.path.splitext(image_test)
-        print(extension)
+        #print(extension)
         self.assertIn(extension, ['.JPEG', '.PNG', '.JPG'], f'Invalid image format: {extension}')
 
     def test_is_good_format(self):
         image_test = test_images[0]
         img = Image.open(image_test)
-        print("img.format", img.format)  # 'JPEG'
+        #print("img.format", img.format)  # 'JPEG'
         self.assertIn(img.format, ['JPEG', 'PNG', 'JPG'], f'Invalid image format: {img.format}')
 
     def test_size_limit(self):
@@ -98,9 +98,9 @@ class TestImage(unittest.TestCase):
         prediction_0 = predict(X_test)
 
 
-        print("==> Prediction : " + str(prediction_0.iloc[0, 0]) +
-               " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
-               str(prediction_0.iloc[0, 2]) + " for " + str(round(prediction_0.iloc[0, 3] * 100, 2)) + "%")
+        #print("==> Prediction : " + str(prediction_0.iloc[0, 0]) +
+        #       " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
+        #       str(prediction_0.iloc[0, 2]) + " for " + str(round(prediction_0.iloc[0, 3] * 100, 2)) + "%")
 
         self.assertEqual(str(prediction_0.iloc[0, 0]), "Apple",
                           f"Category prediction is wrong. Expected Apple but got {str(prediction_0.iloc[0, 0])}")
