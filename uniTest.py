@@ -57,31 +57,33 @@ class TestImage(unittest.TestCase):
 
     def test_image_resolution(self):
         # Charger l'image de test
-        image_test = test_images[0]
+        
+        with open(test_images[0], 'rb') as file:
+            img = cv2.imread(test_images[0])
 
-        img = cv2.imread(image_test)
-
-        # Vérifier que les dimensions de l'image sont cohérentes avec les attentes du système
-        expected_height, expected_width = 256, 256 # min /max +++
-        self.assertEqual(img.shape[:2], (expected_height, expected_width),
-                         f"Inconsistent image dimensions. Expected {expected_height}x{expected_width} but got {img.shape[:2]}")
+            # Vérifier que les dimensions de l'image sont cohérentes avec les attentes du système
+            expected_height, expected_width = 256, 256 # min /max +++
+            self.assertEqual(img.shape[:2], (expected_height, expected_width),
+                             f"Inconsistent image dimensions. Expected {expected_height}x{expected_width} but got {img.shape[:2]}")
 
 
-    def test_image_quality(self): # degré de flou
-        img = Image.open(test_images[0])
+    def test_image_quality(self):
+        
+        with open(test_images[0], 'rb') as file:
+            img = Image.open(file)
 
-        # Convertir l'image en niveaux de gris
-        img = img.convert('L')
+            # Convertir l'image en niveaux de gris
+            img = img.convert('L')
 
-        # Calculer le coefficient de variation de l'image
-        pixels = np.array(img).flatten()
-        cv = np.std(pixels) / np.mean(pixels)
+            # Calculer le coefficient de variation de l'image
+            pixels = np.array(img).flatten()
+            cv = np.std(pixels) / np.mean(pixels)
 
-        # Définir la limite de qualité d'image
-        quality_limit = 0.20
+            # Définir la limite de qualité d'image
+            quality_limit = 0.20
 
-        # Vérifier la qualité de l'image
-        self.assertLess(cv, quality_limit, f'Image quality is too low. CV={cv}')
+            # Vérifier la qualité de l'image
+            self.assertLess(cv, quality_limit, f'Image quality is too low. CV={cv}')
 
 ##########
 # test d'une prédiction du modèle
