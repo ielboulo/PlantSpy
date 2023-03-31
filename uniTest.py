@@ -86,26 +86,26 @@ class TestImage(unittest.TestCase):
 ##########
 # test d'une prédiction du modèle
 
-    def test_image_prediction(self):  # degré de flou
+    def test_image_prediction(self):
         # for i in range(0, level):
-        pic = test_images[0]
-        img = cv2.imread(pic, cv2.IMREAD_COLOR)
-        img_resized = cv2.resize(img, (100, 100))
+        with open(test_images[0], 'rb') as file:
+            img = cv2.imread(file, cv2.IMREAD_COLOR)
+            img_resized = cv2.resize(img, (100, 100))
 
-        X_test = []
-        X_test.append(img_resized)
-        X_test = np.array(X_test) / 255
-        prediction_0 = predict(X_test)
+            X_test = []
+            X_test.append(img_resized)
+            X_test = np.array(X_test) / 255
+            prediction_0 = predict(X_test)
 
 
-        #print("==> Prediction : " + str(prediction_0.iloc[0, 0]) +
-        #       " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
-        #       str(prediction_0.iloc[0, 2]) + " for " + str(round(prediction_0.iloc[0, 3] * 100, 2)) + "%")
+            #print("==> Prediction : " + str(prediction_0.iloc[0, 0]) +
+            #       " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
+            #       str(prediction_0.iloc[0, 2]) + " for " + str(round(prediction_0.iloc[0, 3] * 100, 2)) + "%")
 
-        self.assertEqual(str(prediction_0.iloc[0, 0]), "Apple",
-                          f"Category prediction is wrong. Expected Apple but got {str(prediction_0.iloc[0, 0])}")
-        self.assertEqual(str(prediction_0.iloc[0, 2]), "Cedar_apple_rust",
-                          f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0.iloc[0, 2])}")
+            self.assertEqual(str(prediction_0.iloc[0, 0]), "Apple",
+                              f"Category prediction is wrong. Expected Apple but got {str(prediction_0.iloc[0, 0])}")
+            self.assertEqual(str(prediction_0.iloc[0, 2]), "Cedar_apple_rust",
+                              f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0.iloc[0, 2])}")
 
 
 ##########
