@@ -20,12 +20,12 @@ jobs:
         
     - name: Install dependencies
       run: pip install -r requirements.txt
-
+      
     - name: Run Unit Tests
       run: |
-        python -m unittest discover -s tests -p 'uniTest.py'
-        TOTAL_TESTS=$(python -m unittest discover -s tests -p 'uniTest.py' -f | grep -c "Ran ")
-        PASSED_TESTS=$(python -m unittest discover -s tests -p 'uniTest.py' -f | grep -c "OK")
+        python uniTest.py
+        TOTAL_TESTS=$(python uniTest.py -f | grep -c "Ran ")
+        PASSED_TESTS=$(python uniTest.py -f | grep -c "OK")
         SUCCESS_RATE=$(echo "scale=2; $PASSED_TESTS/$TOTAL_TESTS*100" | bc)
         if (( $(echo "$SUCCESS_RATE < 80.0" | bc -l) )); then
           echo "Less than 80% of tests passed. Reverting the push."
@@ -34,4 +34,5 @@ jobs:
         else
           echo "80% or more of tests passed."
         fi
+
 
