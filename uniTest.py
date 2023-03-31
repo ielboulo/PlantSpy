@@ -104,7 +104,7 @@ class TestImage(unittest.TestCase):
             #       " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
             #       str(prediction_0.iloc[0, 2]) + " for " + str(round(prediction_0.iloc[0, 3] * 100, 2)) + "%")
 
-            self.assertEqual(str(prediction_0.iloc[0, 0]), "Orange",
+            self.assertEqual(str(prediction_0.iloc[0, 0]), "Apple",
                               f"Category prediction is wrong. Expected Apple but got {str(prediction_0.iloc[0, 0])}")
             self.assertEqual(str(prediction_0.iloc[0, 2]), "Cedar_apple_rust",
                               f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0.iloc[0, 2])}")
