@@ -35,10 +35,10 @@ class TestImage(unittest.TestCase):
         self.assertIn(extension, ['.JPEG', '.PNG', '.JPG'], f'Invalid image format: {extension}')
 
     def test_is_good_format(self):
-        image_test = test_images[0]
-        img = Image.open(image_test)
-        #print("img.format", img.format)  # 'JPEG'
-        self.assertIn(img.format, ['JPEG', 'PNG', 'JPG'], f'Invalid image format: {img.format}')
+        with open(test_images[0], 'rb') as file:
+            img = Image.open(file)
+            #print("img.format", img.format)  # 'JPEG'
+            self.assertIn(img.format, ['JPEG', 'PNG', 'JPG'], f'Invalid image format: {img.format}')
 
     def test_size_limit(self):
         """
