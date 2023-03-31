@@ -16,7 +16,7 @@ test_images = [
     './Models/NewPlantDiseasesDataset/test/test/CornCommonRust3.JPG',
     './ModelsNewPlantDiseasesDataset/test/test/PotatoEarlyBlight1.JPG',
     './Models/NewPlantDiseasesDataset/test/test/PotatoEarlyBlight4.JPG',
-    './Models/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
+    #'./Models/NewPlantDiseasesDataset/test/test/PotatoHealthy1.JPG',
     './Models/NewPlantDiseasesDataset/test/test/PotatoHealthy2.JPG',
     './Models/NewPlantDiseasesDataset/test/test/TomatoEarlyBlight1.JPG',
     './Models/NewPlantDiseasesDataset/test/test/TomatoHealthy1.JPG',
