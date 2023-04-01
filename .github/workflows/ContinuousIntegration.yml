@@ -30,10 +30,11 @@ jobs:
         FAILED_TESTS=$(echo "$EXEC_TESTS" | grep -oq "FAILED (failures=[0-9]*)" && echo "$EXEC_TESTS" | grep -o "FAILED (failures=[0-9]*)" | awk -F= '{print $2}' | awk -F')' '{print $1}' || echo "0")
         echo $FAILED_TESTS
         FAIL_RATE=$(echo "scale=2; $FAILED_TESTS/$TOTAL_TESTS*100" | bc)
-        if (( $(echo "$FAIL_RATE > 20.0" | bc -l) )); then
-            echo "Less than 80% of tests passed. ($FAIL_RATE% failed) Reverting the push."
+        if (( $(echo "$FAIL_RATE > 15.0" | bc -l) )); then
+            echo "Less than 85% of tests passed. ($FAIL_RATE% failed). Reverting the push."
+            git revert HEAD
         else
-            echo "80% or more of tests passed. ($FAIL_RATE% failed)"
+            echo "85% or more of tests passed. ($FAIL_RATE% failed)"
         fi
 
 
