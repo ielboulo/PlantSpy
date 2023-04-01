@@ -23,6 +23,7 @@ jobs:
       
     - name: Run Unit Tests
       run: |
+        Run python uniTest.py
         EXEC_TESTS=$(python uniTest.py 2>&1)
         TOTAL_TESTS=$(echo "$EXEC_TESTS" | grep -o "Ran [0-9]* tests" | awk '{print $2}')
         echo  $TOTAL_TESTS
