@@ -23,7 +23,20 @@ jobs:
       
     - name: Run Unit Tests
       run: |
-        python uniTest.py
+        EXEC_TESTS=$(python uniTest.py 2>&1)
+        TOTAL_TESTS=$(echo "$EXEC_TESTS" | grep -o "Ran [0-9]* tests" | awk '{print $2}')
+        echo  $TOTAL_TESTS
+        FAILED_TESTS=$(echo "$EXEC_TESTS" | grep -o "FAILED (failures=[0-9]*)" | awk -F= '{print $2}' | awk -F')' '{print $1}')
+        echo $FAILED_TESTS
+        FAIL_RATE=$(echo "scale=2; $FAILED_TESTS/$TOTAL_TESTS*100" | bc)
+        if (( $(echo "$FAIL_RATE > 20.0" | bc -l) )); then
+            echo "Less than 80% of tests passed. ($FAIL_RATE% failed) Reverting the push."
+        else
+            echo "80% or more of tests passed. ($FAIL_RATE% failed)"
+        fi
+
+
+        
         #TOTAL_TESTS=$(python uniTest.py -f | grep -c "Ran ")
         #PASSED_TESTS=$(python uniTest.py -f | grep -c "OK")
         #SUCCESS_RATE=$(echo "scale=2; $PASSED_TESTS/$TOTAL_TESTS*100" | bc)
