@@ -40,7 +40,9 @@ jobs:
         
         if (( $(echo "$FAIL_RATE > 15.0" | bc -l) )); then
             echo "Less than 85% of tests passed. ($FAIL_RATE% failed). Reverting the push."
-            #git revert HEAD
+            git config --global user.email "plantspygirls@gmail.com"
+            git config --global user.name "PlantSpy"
+            git revert HEAD
         else
             echo "85% or more of tests passed. ($FAIL_RATE% failed)"
         fi
