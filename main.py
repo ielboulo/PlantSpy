@@ -7,6 +7,7 @@ from PIL import Image
 import pymongo
 import uvicorn
 from authenticate import *
+from authorisation import *
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security.api_key import APIKeyHeader
@@ -43,8 +44,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
-#oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
-
 
 # Configuration de la connexion à MongoDB
 client = pymongo.MongoClient("mongodb://mongo:27017/")
@@ -54,11 +53,25 @@ collection = db["utilisateurs"]
 
 collection.insert_one({
     "username": "johndoe",
-    "password": pwd_context.hash('secret')
+    "password": pwd_context.hash('secret'),
+    "roles": ["admin", "categorie","sante","maladie"]
 })
 collection.insert_one({
     "username": "alice",
-    "password": pwd_context.hash('wonderland')
+    "password": pwd_context.hash('wonderland'),
+    "roles": ["categorie","sante","maladie"]
+})
+
+collection.insert_one({
+    "username": "laboratoire",
+    "password": pwd_context.hash('analyse'),
+    "roles": ["stockage"]
+})
+
+collection.insert_one({
+    "username": "bob",
+    "password": pwd_context.hash('ordinateur'),
+    "roles": ["categorie"]
 })
 
 # Définition des modèles pour les entrées et les sorties
@@ -68,29 +81,6 @@ class User(BaseModel):
 
 
 
-# @app.post("/token")
-# async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-#     user = authenticate_user(form_data.username, form_data.password)
-#     if not user:
-#         raise HTTPException(status_code=400, detail="Incorrect username or password")
-#     access_token = create_access_token(data={"sub": user})
-#     return {"access_token": access_token}
-
-# @app.get("/secret")
-# def read_secret_data(    current_user: User = Depends(OAuth2PasswordBearer(tokenUrl="/token"))):
-#     return {"message": "Welcome to the secret data"}
-
-
-# def validate_token(token: str):
-#     try:
-#         decoded = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-#         return decoded
-#     except (jwt.exceptions.InvalidTokenError, jwt.exceptions.DecodeError):
-#         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Not authorized")
-
-
-# to get a string like this run:
-# openssl rand -hex 32
 async def verify_token(token: str = Depends(oauth2_scheme)):
     print("verification token")
     try:
@@ -117,6 +107,9 @@ async def verify_token(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=404, detail="User not found")
     
     # Si tout est ok, renvoyer l'utilisateur
+    print('VT user vaut:',user)
+    print('VT userdb vaut:',user_db)
+    print('VT user[\'roles\'] vaut:',user['roles'])
     return user
 
 
@@ -149,9 +142,11 @@ async def get_health():
 # Route pour la prédiction du type de plante via url
 @app.get("/prediction_plante_url", tags=['Prediction type de Plantes via url'])
 
-async def prediction_plante(url: str):
+async def prediction_plante(url: str, token: str = Depends(verify_token)):
     """ A partir de l'URL on prédit le type de plante
     """
+    if not has_role(token,'categorie'):
+        raise HTTPException(status_code=403, detail="Rôle insuffisant")
     reponse = plant.pred_categorie(url)
     return reponse
 
@@ -159,10 +154,11 @@ async def prediction_plante(url: str):
 @app.post("/prediction_plante_file",
            tags=['Prediction type de Plantes via un fichier'], 
            name="Permet de connaître la catégorie de la plante")
-async def predict_categorie(file: UploadFile):
+async def predict_categorie(file: UploadFile, token: str = Depends(verify_token)):
     
     image = Image.open(io.BytesIO(await file.read()))
-    #check_access(user_validation["access_level"], "user")
+    if not has_role(token,'categorie'):
+        raise HTTPException(status_code=403, detail="Rôle insuffisant")
     image = plant.preprocessing(image)
     prediction = plant.pred_categorie_file(image)
    
@@ -171,15 +167,20 @@ async def predict_categorie(file: UploadFile):
 # Route pour la prédiction de la santé de la plante via une url
 @app.get("/prediction_sante_url", tags=['Prediction Santé de la Plante via url'])
 async def prediction_sante(url: str, token: str = Depends(verify_token)):
+    print('le retour du token vaut : ',token)
+    print('has role',has_role(token,'sante'))
+    if not has_role(token,'sante'):
+        raise HTTPException(status_code=403, detail="Rôle insuffisant")
     reponse = plant.pred_healthy(url)
     return reponse
 
 # Route pour la prédiction de la santé de la plante via un fichier
-@app.post("prediction_sante_file", tags=["Prediction Santé de la Plante via un fichier"], name="Permet de savoir si la plante est malade ou non")
-async def predict_healthy(file: UploadFile):
+@app.post("/prediction_sante_file", tags=["Prediction Santé de la Plante via un fichier"], name="Permet de savoir si la plante est malade ou non")
+async def predict_healthy(file: UploadFile, token: str = Depends(verify_token)):
     
     image = Image.open(io.BytesIO(await file.read()))
-    #check_access(user_validation["access_level"], "user")
+    if not has_role(token,'sante'):
+        raise HTTPException(status_code=403, detail="Rôle insuffisant")
     image = plant.preprocessing(image)
     prediction = plant.pred_healthy_file(image)
    
@@ -188,9 +189,11 @@ async def predict_healthy(file: UploadFile):
 # Route pour la prédiction de la maladie de la plante via une url
 @app.get("/prediction_maladie_url", tags=['Prediction de la Maladie de la Plante via une url'])
 
-async def prediction_maladie(url: str):
+async def prediction_maladie(url: str, token: str = Depends(verify_token)):
     """ A partir de l'URL on prédit le type de plante
     """
+    if not has_role(token,'maladie'):
+        raise HTTPException(status_code=403, detail="Rôle insuffisant")
     reponse = plant.predict(url)
     return reponse
 
@@ -199,10 +202,11 @@ async def prediction_maladie(url: str):
 @app.post("/prediction_maladie_file", 
           tags=["Prediction de la Maladie de la Plante via un fichier"], 
           name="Permet de connaître la catégorie de la plante et le nom de la maladie si elle est connue")
-async def predict_TypeMaladie(file: UploadFile):
+async def predict_TypeMaladie(file: UploadFile, token: str = Depends(verify_token)):
     
     image = Image.open(io.BytesIO(await file.read()))
-    #check_access(user_validation["access_level"], "user")
+    if not has_role(token,'maladie'):
+        raise HTTPException(status_code=403, detail="Rôle insuffisant")
     image = plant.preprocessing(image)
     prediction = plant.predict_file(image)
     
