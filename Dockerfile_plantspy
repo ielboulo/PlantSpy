@@ -7,6 +7,7 @@ ADD requirements.txt /app/requirements.txt
 ADD main.py /app/main.py
 ADD PlantSpyModels.py /app/PlantSpyModels.py
 ADD authenticate.py /app/authenticate.py
+ADD authorisation.py /app/authorisation.py
 ADD models /app/models
 WORKDIR /app/
 
