@@ -1,6 +1,6 @@
 # PlantSpy
 PlantSpy is an AI tool (Deep Learning) allowing to detect the category of a plant, its health and its eventual sickness name.
-<img src="https://i.imgur.com/vJJDnbv.png"/>
+<img src="https://i.imgur.com/Oln0kaH.png"/>
 
 ## 1-Présentation :
 
