@@ -2,7 +2,7 @@
 PlantSpy is an AI tool (Deep Learning) allowing to detect the category of a plant, its health and its eventual sickness name.
 
 
-## 1-Scripts Python :
+## 1-Les modèles de prédictions - Scripts Python :
 Pour utiliser les modèles de prediction, il suffit de :
 
 1- Fournir une image au script python  
@@ -59,7 +59,22 @@ Les utilisateurs sont enregistrés dans une base de données MongoDB.
 
 
 ## 3- Isolation - Docker : 
+Afin d'isoler notre modèle 
 ## 4- Testing et Monitoring - AirFlow :
+
 ## 5- CI/CD - GitHub Actions : 
+
+Afin de valider la stabilité de notre application, une CI/CD a été mise en place via GitHub Actions. 
+En effet, on implémenté le workflow suivant :
+- Aprés chaque push, lancer automatiquement les tests unitaires
+- Vérifier la stabilité des modèles.
+- Vérifier la stabilité de l'authentification à l'application.
+- Vérifier la stabilité de l'application FastAPI
+On vérifie cette stabilité via le nombre de tests réussis. Un seuil de 80% de réussite est exigé.
+
+Si le nombre de tests réussis est en dessous du seuil exigé, on revert le dernier commit sur le main du repo GitHub.
+
 ## 6- Interface Web - Bootstrap/React/CSS :
+Afin de facilité l'utilisation de notre API, une interface web front-end est encours de développement. 
+Elle permettra d'assurer l'accés aux fonctionnalités suivantes : authentification et prédictions de la catégorie de la plante, de son état de santé et de son eventuelle maladie.
 
