@@ -59,7 +59,14 @@ Les utilisateurs sont enregistrés dans une base de données MongoDB.
 
 
 ## 3- Isolation - Docker : 
-Afin d'isoler notre modèle 
+Afin d'isoler notre modèle, on a assuré son déploiement via Docker. 
+Ce processus va nous garantir la stabilité de l'API :
+- En installant l'environnement python adapté : le fichier "requirements.txt" contient toutes les lib python à installer. 
+- La sécurité de l'API est assurée via la méthode d'authentification OAuth
+- L'image de base utilisée est "mongo". Cela simplifie l'accés à une DataBase de type MongoDB dans laquelle on configure les comptes autorisés à accéder à l'API.
+
+Pour plus de détails, voir le répertoire GitHub qui contient les fichiers de configurations nécessaires.
+
 ## 4- Testing et Monitoring - AirFlow :
 
 ## 5- CI/CD - GitHub Actions : 
