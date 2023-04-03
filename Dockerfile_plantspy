@@ -1,8 +1,9 @@
 FROM debian:latest
 RUN apt-get update && apt-get install python3-pip -y 
 RUN pip3 install opencv-python-headless==4.5.3.56
-ADD requirements.txt /app/requirements.txt
 
+RUN mkdir /app
+ADD requirements.txt /app/requirements.txt
 
 ADD main.py /app/main.py
 ADD PlantSpyModels.py /app/PlantSpyModels.py

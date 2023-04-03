@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Header, Depends,UploadFile
+from fastapi import FastAPI, HTTPException, Header, Depends,UploadFile, File,Request
 from pydantic import BaseModel
 import PlantSpyModels as plant
 import jwt
@@ -14,6 +14,9 @@ from fastapi.security.api_key import APIKeyHeader
 from starlette.status import HTTP_401_UNAUTHORIZED
 from datetime import datetime, timedelta
 from starlette.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from werkzeug.utils import secure_filename
+import os
 
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -73,11 +76,6 @@ collection.insert_one({
     "password": pwd_context.hash('ordinateur'),
     "roles": ["categorie"]
 })
-
-# Définition des modèles pour les entrées et les sorties
-class User(BaseModel):
-    username: str
-    password: str
 
 
 
@@ -211,6 +209,32 @@ async def predict_TypeMaladie(file: UploadFile, token: str = Depends(verify_toke
     prediction = plant.predict_file(image)
     
     return {"prediction": prediction}
+
+#ajout image
+@app.post('/ajout_maladie', tags=["Ajout de photo maladie dans le dossier pour entrainement "])
+async def ajout_maladie(request: Request):
+    form_data = await request.form()
+    print(form_data)
+    if form_data['file'].filename == '':
+        return JSONResponse({'error': 'No image uploaded'}, status_code=400)
+    categorie_plante = form_data['categorie_plante']
+    sante_plante = form_data['sante_plante']
+    maladie_plante = form_data['maladie_plante']
+    filename = secure_filename(f"{categorie_plante}_{sante_plante}_{maladie_plante}.jpg")
+    file_path = os.path.join('images', filename)
+
+    with open(file_path, 'wb') as f:
+        f.write(await form_data['file'].read())
+        print('fichier',f,' recorded')
+    
+    with open('images/logs.txt', 'a') as file:
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        file.write("Positif\n")
+        print('logs updated')
+        
+    return JSONResponse({'success': 'Image uploaded successfully'}, status_code=200)
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
