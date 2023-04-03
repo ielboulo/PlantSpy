@@ -38,9 +38,11 @@ nom_de_catégorie_de_plante + intervalle de confiance de prediction en % + [Heal
 Résultat :
 ==> Prediction : Apple for 94.95% and as Cedar_apple_rust for 100.0%
 
-### 1-2-Tests Unitaires du modèle :
+### 1-1-Tests Unitaires du modèle :
 Le fichier uniTest.py contient les tests unitaires qui permettent de vérifier si l'éxecution du modèle de prédiction de la catégorie de la plante est bonne, ainsi que de vérifier la validité des images données comme input au modèle. 
 Ces tests unitaires actuellement s'appliquent seulement au modèle, comme première étape.
+
+### 1-2-Tests Unitaires de l'API :
 D'autres tests unitaires seront à implémenter afin de tester fonctionnellement l'API, qu'on verra par la suite.
 
 
@@ -59,6 +61,7 @@ Les utilisateurs sont enregistrés dans une base de données MongoDB.
 
 
 ## 3- Isolation - Docker : 
+
 Afin d'isoler notre modèle, on a assuré son déploiement via Docker. 
 Ce processus va nous garantir la stabilité de l'API :
 - En installant l'environnement python adapté : le fichier "requirements.txt" contient toutes les lib python à installer. 
@@ -68,6 +71,15 @@ Ce processus va nous garantir la stabilité de l'API :
 Pour plus de détails, voir le répertoire GitHub qui contient les fichiers de configurations nécessaires.
 
 ## 4- Testing et Monitoring - AirFlow :
+
+Afin d'assurer un test automatique de l'API mise en place, on a utilisé la plateforme "AirFlow". 
+Le processus mis en place actuellement est comme suit : 
+On utilise un "DAG" composé de deux tâches ("task").
+La première tâche consiste à tester l'application de prédiction avec un ensemble d'images.
+La deuxième tâche consiste à récupérer les résultats de prédictions de la première tâche et les stocker dans un log (.CSV) afin de le mettre à disposition des Data Scientist pour vérifier la stabilité du modèle. 
+
+Une troisème devrait être implémentée prochainement; c'est le ré-entrainement du modèle. 
+Si l'accuracy des prédictions resultantes des tache 1 + 2 est en-dessous de 85%, une tâche de re-entraienemnt des modèles devrait être lancée.
 
 ## 5- CI/CD - GitHub Actions : 
 
@@ -82,6 +94,7 @@ On vérifie cette stabilité via le nombre de tests réussis. Un seuil de 80% de
 Si le nombre de tests réussis est en dessous du seuil exigé, on revert le dernier commit sur le main du repo GitHub.
 
 ## 6- Interface Web - Bootstrap/React/CSS :
+
 Afin de facilité l'utilisation de notre API, une interface web front-end est encours de développement. 
 Elle permettra d'assurer l'accés aux fonctionnalités suivantes : authentification et prédictions de la catégorie de la plante, de son état de santé et de son eventuelle maladie.
 
