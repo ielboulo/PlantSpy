@@ -2,7 +2,7 @@
 PlantSpy is an AI tool (Deep Learning) allowing to detect the category of a plant, its health and its eventual sickness name.
 
 
-
+## 1-Scripts Python :
 Pour utiliser les modèles de prediction, il suffit de :
 
 1- Fournir une image au script python  
@@ -37,3 +37,29 @@ nom_de_catégorie_de_plante + intervalle de confiance de prediction en % + [Heal
 
 Résultat :
 ==> Prediction : Apple for 94.95% and as Cedar_apple_rust for 100.0%
+
+### 1-2-Tests Unitaires du modèle :
+Le fichier uniTest.py contient les tests unitaires qui permettent de vérifier si l'éxecution du modèle de prédiction de la catégorie de la plante est bonne, ainsi que de vérifier la validité des images données comme input au modèle. 
+Ces tests unitaires actuellement s'appliquent seulement au modèle, comme première étape.
+D'autres tests unitaires seront à implémenter afin de tester fonctionnellement l'API, qu'on verra par la suite.
+
+
+## 2- Créer une API du modèle - FastAPI : 
+
+L'API de notre modèle a été faite en utilisant FastAPI. 
+
+Sur l'API, on donne les fonctionnalités suivantes à l'utilisateur :
+1- L'authentification avec un username + passeword.
+2- Prédiction de la catégorie de la plante à partir d'une image uploadé ou via URL.
+3- Prédiction de l'état de santé de la plante à partir d'une image uploadé ou via URL.
+4- Prédiction du nom de la maladie de la plante à partir d'une image uploadé ou via URL.
+
+Pour l'authentification des utilisateurs, on utilisé le protocole OAuth, protocole de délégation d'authentification.
+Les utilisateurs sont enregistrés dans une base de données MongoDB.
+
+
+## 3- Isolation - Docker : 
+## 4- Testing et Monitoring - AirFlow :
+## 5- CI/CD - GitHub Actions : 
+## 6- Interface Web - Bootstrap/React/CSS :
+
