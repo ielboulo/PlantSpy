@@ -6,7 +6,7 @@ PlantSpy is an AI tool (Deep Learning) allowing to detect the category of a plan
 
 L'objet de ce projet est, à partir du modèle de machine learning précédent , de déployer une API qui propose à des tiers des services et de maintenir les modèles d’apprentissage automatique en production de manière fiable et efficace.
 
-## 3-API
+## 2-API
 ![image](https://user-images.githubusercontent.com/83654862/229580127-42a99964-4721-49e0-9c04-46802b78365a.png)
 L'API de notre modèle a été faite en utilisant FastAPI.
 
@@ -17,25 +17,25 @@ Sur l'API, on donne les fonctionnalités suivantes à l'utilisateur :
 - 4- Prédiction du nom de la maladie de la plante à partir d'une image uploadé ou via URL.
 - 5- Possibilité pour les laboratoires d'analyse des maladies des plantes d'enrichir les données du projet
 
-## 4-BDD
+## 3-BDD
 ![image](https://user-images.githubusercontent.com/83654862/229581122-d0a0ebac-f3c0-4444-9dcd-7d3960685348.png)
 Les utilisateurs ayant le droit de ce connecter à l'API sont stockées sur une base de données MongoDb
 
-## 5-Sécurisation API & Rôles
+## 4-Sécurisation API & Rôles
 La sécurité de l'API est d'abord assuré par la gestion des entêtes CORS (Cross-Origin Resource Sharing). La méthode de sécurisation pour l'authentification et les autorisations est Oauth2
 ![image](https://user-images.githubusercontent.com/83654862/229582928-ace83cf9-c8a5-4248-bd80-e3c25aec85f8.png)
 
 
-## 6-Test Unitaires
+## 5-Test Unitaires
 ![image](https://user-images.githubusercontent.com/55795871/229561394-c865cc90-1fec-4bb6-a99b-4ff5700d6d82.png)
-### 1-1-Tests Unitaires du modèle :
+### 5-1-Tests Unitaires du modèle :
 Le fichier uniTest.py contient les tests unitaires qui permettent de vérifier si l'éxecution du modèle de prédiction de la catégorie de la plante est bonne, ainsi que de vérifier la validité des images données comme input au modèle. 
 Ces tests unitaires actuellement s'appliquent seulement au modèle, comme première étape.
 
-### 1-2-Tests Unitaires de l'API :
+### 5-2-Tests Unitaires de l'API :
 D'autres tests unitaires seront à implémenter afin de tester fonctionnellement l'API, qu'on verra par la suite.
 
-## 2-Dockerisation de l'API et de la BDD
+## 6-Dockerisation de l'API et de la BDD
 L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isolé dans son propre container.
 
 ## 7-Testing & Monitoring
