@@ -13,7 +13,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_plantspy
+    volumes:
+      - images:/app/images
     depends_on:
       - mongo
+
+volumes:
+  images:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/mlpos/api_mlops/images/
+      o: bind
+    
 
   
