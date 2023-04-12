@@ -13,11 +13,19 @@ dict_categorie = {0: 'Apple', 1: 'Blueberry', 2: 'Cherry', 3: 'Corn', 4: 'Grape'
                   7: 'Pepper', 8: 'Potato', 9: 'Raspberry', 10: 'Soybean', 11: 'Squash', 12: 'Strawberry', 13: 'Tomato'}
 
 
+def extract_category_from_filename(filename):
+    match = re.match(r"([A-Z][a-z]+)([A-Z][a-z]+)(.*)", filename)
+    if match:
+        category = match.group(1)
+    else:
+        category = "unknown"
+    return category
+
+
 def preprocessing(image):
     image = image.resize((100,100))
     image = np.array(image)
     image = image / 255.0
-    # image = np.expand_dims(image, axis=0)
     return image.tolist()
 
 
@@ -57,10 +65,22 @@ def save_predictions_to_csv(predictions):
         os.makedirs(results_dir)
 
     df = pd.DataFrame(predictions)
-    df = df[['filename', 'categorie', 'confiance_categorie']]  
+    df['true_category'] = df['filename'].apply(extract_category_from_filename)
+    df = df[['filename', 'true_category', 'categorie', 'confiance_categorie']]  
     csv_path = os.path.join(results_dir, 'predictions.csv')
     df.to_csv(csv_path, index=False)
 
+def calculate_accuracy(predictions):
+    df = pd.DataFrame(predictions)
+    df['true_category'] = df['filename'].apply(extract_category_from_filename)
+    df['is_correct'] = df['true_category'] == df['categorie']
+    accuracy = df['is_correct'].mean()
+    
+    accuracy_file_path = "/app/results/accuracy.txt"
+    with open(accuracy_file_path, "w") as f:
+        f.write(f"Model accuracy: {accuracy:.4f}")
+
+    return accuracy
 
 
 default_args = {
@@ -73,7 +93,7 @@ default_args = {
 }
 
 dag = DAG(
-    dag_id="image_prediction_pipeline",
+    dag_id="test",
     default_args=default_args,
     schedule_interval=None
 )
@@ -105,10 +125,15 @@ save_predictions_task = PythonOperator(
     dag=dag
 )
 
-
+calculate_accuracy_task = PythonOperator(
+    task_id="calculate_accuracy",
+    python_callable=calculate_accuracy,
+    op_kwargs={"predictions": predict_task.output},
+    dag=dag
+)
 
 load_model_task >> predict_task
 load_images_task >> predict_task
-predict_task >> save_predictions_task
+predict_task >> save_predictions_task >> calculate_accuracy_task
 
 
