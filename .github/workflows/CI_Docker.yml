@@ -26,6 +26,14 @@ jobs:
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         sudo apt-get update
         sudo apt-get install docker-ce docker-ce-cli containerd.io
+        
+    - name : Install  docker-buildx plugin
+      run: |
+        DOCKER_BUILDX_VERSION="v0.10.4"
+        BUILDX_DOWNLOAD_URL="https://github.com/docker/buildx/releases/download/$DOCKER_BUILDX_VERSION/buildx-$DOCKER_BUILDX_VERSION.linux-amd64"
+        sudo curl -L $BUILDX_DOWNLOAD_URL -o /usr/local/bin/docker-buildx
+        sudo chmod a+x /usr/local/bin/docker-buildx
+
 
 
 
