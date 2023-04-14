@@ -15,7 +15,7 @@ jobs:
 
     - name: Setup Docker
       run: |
-        sudo apt-get update
+        #sudo apt-get update # IEL : is it necessary all time ? : generates conflict between packages 
         sudo apt-get install -y docker.io
 
     - name: Run setup.sh script
