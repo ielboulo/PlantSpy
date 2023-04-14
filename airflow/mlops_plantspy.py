@@ -74,6 +74,22 @@ def pred_categorie(X, model):
     prediction['filename'] = filenames 
     return prediction.to_dict()
 
+def pred_categorie_train(X):
+    filenames = [img[0] for img in X]  
+    X = [img[1] for img in X]
+    model_path = "/app/models/periodique"
+    model_categorie = tf.keras.models.load_model(model_path)
+    model_json = model_categorie.to_json()
+    model_categorie = tf.keras.models.model_from_json(model_json)
+    #model_categorie = tf.keras.models.model(model)
+    model_categorie.load_weights("/app/models/periodique/variables/variables")
+    predict_categorie = model_categorie.predict(X)
+    predict_categorie_class = predict_categorie.argmax(axis=1)
+    prediction = (pd.DataFrame(predict_categorie_class, columns=['categorie'])).replace({"categorie": dict_categorie})
+    prediction['confiance_categorie'] = predict_categorie.max(axis=1)
+    prediction['filename'] = filenames 
+    return prediction.to_dict()
+
 
 def save_predictions_to_csv(predictions):
     results_dir = "/app/results"
@@ -108,7 +124,7 @@ def load_images_ml(image_folder):
         for repertoire in dirs:
             chemin=image_folder+repertoire
             print('traitement train dans le chemin:', chemin)
-            max = 50
+            max = 200
             compteur = 0
             for images in os.listdir(chemin):
                 if(compteur<max):
@@ -137,7 +153,7 @@ def load_images_ml(image_folder):
         for repertoire in dirs:
             chemin=image_folder+repertoire
             print('traitement valid dans le chemin:', chemin)
-            max = 50
+            max = 200
             compteur = 0
             for images in os.listdir(chemin):
                 if(compteur<max):
@@ -189,7 +205,7 @@ def load_images_ml(image_folder):
             horizontal_flip=True)
 
     test_data_generator = ImageDataGenerator()
-    batch_size = 25
+    batch_size = 100
 
     training_data = train_data_generator.flow(X_train, y_train, batch_size=batch_size)
     test_data = test_data_generator.flow(X_valid, y_valid, batch_size=batch_size)
@@ -212,12 +228,13 @@ def load_images_ml(image_folder):
     model_LeNet1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     model_LeNet1.summary()
     history_LeNet1 = model_LeNet1.fit_generator(generator = training_data, 
-                              epochs = 10,
+                              epochs = 20,
                               steps_per_epoch = len(X_train)//batch_size,
                               validation_data = test_data,
                               validation_steps = len(X_valid)//batch_size,
                               callbacks = [early_stopping,lr_plateau])
-    tf.saved_model.save(model_LeNet1, "/app/models/periodique")
+    #tf.saved_model.save(model_LeNet1, "/app/models/periodique")
+    tf.keras.models.save_model(model_LeNet1, "/app/models/periodique")
 
 
 
@@ -230,7 +247,7 @@ default_args = {
     "start_date": datetime(2023, 4, 11),
     "email_on_failure": False,
     "email_on_retry": False,
-    "retries": 3
+    "retries": 1
 }
 
 dag = DAG(
@@ -259,6 +276,19 @@ predict_task = PythonOperator(
     dag=dag
 )
 
+predict_new_train_task = PythonOperator(
+    task_id="predict_new_train_task",
+    python_callable=pred_categorie_train,
+    op_kwargs={"X": load_images_task.output},
+    dag=dag
+)
+calculate_accuracy_new_train_task = PythonOperator(
+    task_id="calculate_accuracy_new_train_task",
+    python_callable=calculate_accuracy,
+    op_kwargs={"predictions": predict_new_train_task.output},
+    dag=dag
+)
+
 save_predictions_task = PythonOperator(
     task_id="save_predictions",
     python_callable=save_predictions_to_csv,
@@ -279,10 +309,10 @@ periodic_training_task = PythonOperator(
     dag=dag
 )
 
+periodic_training_task >> [load_model_task , load_images_task]
 
-periodic_training_task >> [load_model_task , load_images_task] >> predict_task >> save_predictions_task >> calculate_accuracy_task
-
-
+[load_model_task , load_images_task] >> predict_task  >> save_predictions_task >> calculate_accuracy_task
+[load_model_task , load_images_task] >> predict_new_train_task  >> calculate_accuracy_new_train_task
 
 
 
