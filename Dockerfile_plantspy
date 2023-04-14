@@ -9,7 +9,7 @@ ADD main.py /app/main.py
 ADD PlantSpyModels.py /app/PlantSpyModels.py
 ADD authenticate.py /app/authenticate.py
 ADD authorisation.py /app/authorisation.py
-ADD models /app/models
+ADD Models /app/Models
 WORKDIR /app/
 
 RUN pip install -r requirements.txt
