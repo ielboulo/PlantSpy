@@ -39,8 +39,7 @@ D'autres tests unitaires seront à implémenter afin de tester fonctionnellement
 L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isolé dans son propre container.
 
 ## 7-Testing & Monitoring
-![image](https://user-images.githubusercontent.com/83654862/232083394-58d8ac25-84e2-4161-8263-ed9391a27a77.png)
-Airflow nous permet de Monitorer de façon périodique l’évolution du projet :
+![image](https://user-images.githubusercontent.com/83654862/232091092-700ce203-6880-4dbf-b916-082e1155d419.png)Airflow nous permet de Monitorer de façon périodique l’évolution du projet :
 - Assurer le maintien des performances grâce à la surveillance des métriques d’alerte
 - Tracker les paramètres et alerter des déviations des performances
 - réentrainement périodique du modèle à partir de toutes les données, y compris les nouvelles
