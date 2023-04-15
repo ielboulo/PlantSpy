@@ -40,10 +40,11 @@ jobs:
         COMPOSE_DOWNLOAD_URL="https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-linux-x86_64"
         sudo curl -L $COMPOSE_DOWNLOAD_URL -o /usr/local/bin/docker-compose
         sudo chmod a+x /usr/local/bin/docker-compose
-        
+
     - name: Create required directories
       run: |
-        mkdir -p /home/mlpos/api_mlops/images/
+        mkdir -p $GITHUB_WORKSPACE/api_mlops/images/
+
 
     - name: Run setup.sh script
       run: |
