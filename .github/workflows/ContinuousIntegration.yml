@@ -28,6 +28,7 @@ jobs:
         EXEC_TESTS=$(python uniTest.py 2>&1)
         TEST_EXIT_CODE=$?
         set -e
+        echo "$EXEC_TESTS"
         if [[ $TEST_EXIT_CODE -ne 0 ]]; then
           echo "Unit tests failed. Skipping fail rate check."
         fi
