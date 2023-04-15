@@ -33,7 +33,8 @@ jobs:
         BUILDX_DOWNLOAD_URL="https://github.com/docker/buildx/releases/download/$DOCKER_BUILDX_VERSION/buildx-$DOCKER_BUILDX_VERSION.linux-amd64"
         sudo curl -L $BUILDX_DOWNLOAD_URL -o /usr/local/bin/docker-buildx
         sudo chmod a+x /usr/local/bin/docker-buildx
-    - name : Install  docker-buildx plugin
+        
+    - name : Install  docker-compose 
       run: |
         sudo rm /usr/local/bin/docker-compose
         DOCKER_COMPOSE_VERSION="v2.17.2" # Remplacez par la version souhaitée
@@ -41,14 +42,18 @@ jobs:
         sudo curl -L $COMPOSE_DOWNLOAD_URL -o /usr/local/bin/docker-compose
         sudo chmod a+x /usr/local/bin/docker-compose
 
-    - name: Create required directories
+    - name: Set volume path
       run: |
-        mkdir -p $GITHUB_WORKSPACE/api_mlops/images/
+        if [ "${{ github.event_name }}" = "push" ]; then
+          echo "VOLUME_PATH=$GITHUB_WORKSPACE/mlpos/api_mlops/images/" >> $GITHUB_ENV
+        else
+          echo "VOLUME_PATH=/home/api_mlops/images/" >> $GITHUB_ENV
+        fi
 
+    - name: Build and Run docker compose 
+      run: |        
+        #echo "Construction de l'image docker authentication"
+        sudo docker build . -f Dockerfile_plantspy -t test_plantspy:latest
 
-    - name: Run setup.sh script
-      run: |
-        docker-compose down -v
-        pip install docker-compose
-        chmod +x setup.sh
-        ./setup.sh
+        #echo "Lancement docker-compose"
+        sudo docker-compose up
