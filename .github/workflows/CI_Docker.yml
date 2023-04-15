@@ -48,5 +48,7 @@ jobs:
 
     - name: Run setup.sh script
       run: |
+        docker-compose down -v
+        pip install docker-compose
         chmod +x setup.sh
         ./setup.sh
