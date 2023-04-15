@@ -23,8 +23,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: $GITHUB_WORKSPACE/mlpos/api_mlops/images/
+      device: ${VOLUME_PATH}
       o: bind
-    
-
-  
