@@ -35,14 +35,11 @@ jobs:
         sudo chmod a+x /usr/local/bin/docker-buildx
     - name : Install  docker-buildx plugin
       run: |
+        sudo rm /usr/local/bin/docker-compose
         DOCKER_COMPOSE_VERSION="v2.17.2" # Remplacez par la version souhaitée
-        COMPOSE_DOWNLOAD_URL="https://github.com/docker/compose/releases/tag/$DOCKER_COMPOSE_VERSION/docker-compose-linux-x86_64"
+        COMPOSE_DOWNLOAD_URL="https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-linux-x86_64"
         sudo curl -L $COMPOSE_DOWNLOAD_URL -o /usr/local/bin/docker-compose
         sudo chmod a+x /usr/local/bin/docker-compose
-
-
-
-
 
     - name: Run setup.sh script
       run: |
