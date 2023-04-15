@@ -91,7 +91,7 @@ def pred_categorie_train(X):
     return prediction.to_dict()
 
 
-def save_predictions_to_csv(predictions):
+def save_predictions_to_csv(predictions,filename):
     results_dir = "/app/results"
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
@@ -99,20 +99,27 @@ def save_predictions_to_csv(predictions):
     df = pd.DataFrame(predictions)
     df['true_category'] = df['filename'].apply(extract_category_from_filename)
     df = df[['filename', 'true_category', 'categorie', 'confiance_categorie']]  
-    csv_path = os.path.join(results_dir, 'predictions.csv')
+    csv_path = os.path.join(results_dir, filename)
     df.to_csv(csv_path, index=False)
 
-def calculate_accuracy(predictions):
+def calculate_accuracy(predictions,filename):
     df = pd.DataFrame(predictions)
     df['true_category'] = df['filename'].apply(extract_category_from_filename)
     df['is_correct'] = df['true_category'] == df['categorie']
     accuracy = df['is_correct'].mean()
     
-    accuracy_file_path = "/app/results/accuracy.txt"
-    with open(accuracy_file_path, "w") as f:
-        f.write(f"Model accuracy: {accuracy:.4f}")
+    accuracy_file_path = "/app/results/"+filename
+    with open(accuracy_file_path, "a") as f:
+        f.write(f"Model accuracy: {accuracy:.4f}\n")
 
     return accuracy
+
+def choix_modele(model_prod_accuracy,model_train_accuracy):
+    if(model_prod_accuracy<model_train_accuracy):
+        print('le modele nouvelement entrainé semble avoir de meilleur performance')
+    else:
+        print('le modele en production entrainé semble avoir de meilleur performance')
+
 
 def load_images_ml(image_folder):
     X_train0=[]
@@ -124,7 +131,7 @@ def load_images_ml(image_folder):
         for repertoire in dirs:
             chemin=image_folder+repertoire
             print('traitement train dans le chemin:', chemin)
-            max = 200
+            max = 300
             compteur = 0
             for images in os.listdir(chemin):
                 if(compteur<max):
@@ -153,7 +160,7 @@ def load_images_ml(image_folder):
         for repertoire in dirs:
             chemin=image_folder+repertoire
             print('traitement valid dans le chemin:', chemin)
-            max = 200
+            max = 300
             compteur = 0
             for images in os.listdir(chemin):
                 if(compteur<max):
@@ -185,6 +192,8 @@ def load_images_ml(image_folder):
 
     print('Shape of X valid:', X_valid.shape)
     print('Shape of y valid:',y_valid.shape)
+    print('y_valid0 :',y_valid0)
+    print('encoder y_valid',encoder.classes_)
 
     early_stopping = callbacks.EarlyStopping(monitor = 'val_loss',
                         patience = 8,
@@ -205,7 +214,7 @@ def load_images_ml(image_folder):
             horizontal_flip=True)
 
     test_data_generator = ImageDataGenerator()
-    batch_size = 100
+    batch_size = 64
 
     training_data = train_data_generator.flow(X_train, y_train, batch_size=batch_size)
     test_data = test_data_generator.flow(X_valid, y_valid, batch_size=batch_size)
@@ -228,7 +237,7 @@ def load_images_ml(image_folder):
     model_LeNet1.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     model_LeNet1.summary()
     history_LeNet1 = model_LeNet1.fit_generator(generator = training_data, 
-                              epochs = 20,
+                              epochs = 30,
                               steps_per_epoch = len(X_train)//batch_size,
                               validation_data = test_data,
                               validation_steps = len(X_valid)//batch_size,
@@ -257,13 +266,13 @@ dag = DAG(
 )
 
 load_model_task = PythonOperator(
-    task_id="load_model",
+    task_id="load_model_production",
     python_callable=load_model,
     dag=dag
 )
 
 load_images_task = PythonOperator(
-    task_id="load_images",
+    task_id="load_images_test",
     python_callable=load_images,
     op_kwargs={"image_folder": "/app/Images/test"},
     dag=dag
@@ -285,34 +294,50 @@ predict_new_train_task = PythonOperator(
 calculate_accuracy_new_train_task = PythonOperator(
     task_id="calculate_accuracy_new_train_task",
     python_callable=calculate_accuracy,
-    op_kwargs={"predictions": predict_new_train_task.output},
+    op_kwargs={"predictions": predict_new_train_task.output, "filename": "accuracy_train.txt"},
     dag=dag
 )
 
 save_predictions_task = PythonOperator(
     task_id="save_predictions",
     python_callable=save_predictions_to_csv,
-    op_kwargs={"predictions": predict_task.output},
+    op_kwargs={"predictions": predict_task.output, "filename": "predictions.csv"},
     dag=dag
 )
+
+save_predictions_train_task = PythonOperator(
+    task_id="save_predictions_train",
+    python_callable=save_predictions_to_csv,
+    op_kwargs={"predictions": predict_new_train_task.output, "filename": "predictions_train.csv"},
+    dag=dag
+)
+
 
 calculate_accuracy_task = PythonOperator(
     task_id="calculate_accuracy",
     python_callable=calculate_accuracy,
-    op_kwargs={"predictions": predict_task.output},
+    op_kwargs={"predictions": predict_task.output,"filename": "accuracy.txt"},
     dag=dag
 )
 periodic_training_task = PythonOperator(
-    task_id="periodic_training",
+    task_id="a_periodic_training",
     python_callable=load_images_ml,
     op_kwargs={"image_folder": "/app/Images/train/"},
     dag=dag
 )
 
-periodic_training_task >> [load_model_task , load_images_task]
+choix_modele_task = PythonOperator(
+    task_id="choix_modele",
+    python_callable=choix_modele,
+    op_kwargs={"model_prod_accuracy": calculate_accuracy_task.output,"model_train_accuracy": calculate_accuracy_new_train_task.output},
+    dag=dag
+)
 
-[load_model_task , load_images_task] >> predict_task  >> save_predictions_task >> calculate_accuracy_task
-[load_model_task , load_images_task] >> predict_new_train_task  >> calculate_accuracy_new_train_task
+periodic_training_task >> predict_new_train_task  >> save_predictions_train_task >> calculate_accuracy_new_train_task
+load_images_task >> predict_new_train_task  >> save_predictions_train_task >> calculate_accuracy_new_train_task >> choix_modele_task
+
+[load_model_task , load_images_task] >> predict_task  >> save_predictions_task >> calculate_accuracy_task >> choix_modele_task
+
 
 
 
