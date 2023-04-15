@@ -11,22 +11,20 @@ from PIL import Image
 
 # Plant Spy AI Deep Learning Models :
 
-model_categorie = tf.keras.models.load_model(
-    'models/model_LeNet1_Categorie_AllData_Softmax')
-
+model_categorie = tf.keras.models.load_model('Models/model_LeNet1_Categorie_AllData_Softmax')
 
 model_healthy = tf.keras.models.load_model("models/model_isHealthy_18K")
 
 model_maladieTomato = tf.keras.models.load_model(
-    'models/model_Tomate_avecHealthy_softmax')
+    'Models/model_Tomate_avecHealthy_softmax')
 model_maladiePotato = tf.keras.models.load_model(
-    'models/model_Potato1_avecHealthy')
+    'Models/model_Potato1_avecHealthy')
 model_maladieCorn = tf.keras.models.load_model(
-    'models/model_Corn_Healthy')
+    'Models/model_Corn_Healthy')
 model_maladieApple = tf.keras.models.load_model(
-    'models/model_Apple_Healthy')
+    'Models/model_Apple_Healthy')
 model_maladieGrape = tf.keras.models.load_model(
-    'models/model_Grape1_Healthy')
+    'Models/model_Grape1_Healthy')
 
 ########################################################################################
 
