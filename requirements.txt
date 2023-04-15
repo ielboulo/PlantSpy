@@ -1,5 +1,5 @@
 pip==22.3.1
-opencv-python
+opencv-python-headless
 tensorflow	
 numpy
 pandas
