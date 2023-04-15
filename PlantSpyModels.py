@@ -13,7 +13,7 @@ from PIL import Image
 
 model_categorie = tf.keras.models.load_model('Models/model_LeNet1_Categorie_AllData_Softmax')
 
-model_healthy = tf.keras.models.load_model("models/model_isHealthy_18K")
+model_healthy = tf.keras.models.load_model("Models/model_isHealthy_18K")
 
 model_maladieTomato = tf.keras.models.load_model(
     'Models/model_Tomate_avecHealthy_softmax')
