@@ -144,8 +144,8 @@ class TestImage(unittest.TestCase):
         
         target_value_category = 85
         target_value_disease = 40
-        self.assertGreater(correct_category_percentage, target_value_category, "correct_category_percentage should be >= 85%")
-        self.assertGreater(correct_disease_percentage, target_value_disease, "correct_disease_percentage should be >= 85%")
+        self.assertGreaterEqual(correct_category_percentage, target_value_category, "correct_category_percentage should be >= 85%")
+        self.assertGreaterEqual(correct_disease_percentage, target_value_disease, "correct_disease_percentage should be >= 40%")
 
 
 
