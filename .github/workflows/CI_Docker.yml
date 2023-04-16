@@ -57,3 +57,6 @@ jobs:
 
         #echo "Lancement docker-compose"
         sudo docker-compose up -d
+    - name: Display Docker Compose logs
+      run: |
+        docker-compose logs
