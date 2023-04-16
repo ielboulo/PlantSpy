@@ -108,16 +108,26 @@ class TestImage(unittest.TestCase):
             
             self.assertEqual(str(prediction_0["maladie_pred"][0]), "Cedar_apple_rust",
                           f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0['maladie_pred'][0])}")
-            
-            #Old :
-            #print("==> Prediction : " + str(prediction_0.iloc[0, 0]) +
-            #       " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
-            #       str(prediction_0.iloc[0, 2]) + " for " + str(round(prediction_0.iloc[0, 3] * 100, 2)) + "%")
 
-            #self.assertEqual(str(prediction_0.iloc[0, 0]), "Apple",
-            #                  f"Category prediction is wrong. Expected Apple but got {str(prediction_0.iloc[0, 0])}")
-            #self.assertEqual(str(prediction_0.iloc[0, 2]), "Cedar_apple_rust",
-            #                  f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0.iloc[0, 2])}")
+    def test_image_prediction_2(self):
+        expected_categories = ["Apple", "Apple", "Apple", "Apple", "Corn", "Corn", "Corn", "Potato", "Potato", "Potato", "Tomato", "Tomato", "Tomato", "Tomato"]
+        expected_diseases = ["Cedar_apple_rust", "Cedar_apple_rust", "Apple_scab", "Apple_scab", "Common_rust", "Common_rust", "Common_rust", "Early_blight", "Early_blight", "Healthy", "Early_blight", "Healthy", "Yellow_curl_virus", "Healthy"]
+
+        for i, image_path in enumerate(test_images):
+            with open(image_path, 'rb') as file:
+                img = cv2.imread(image_path, cv2.IMREAD_COLOR)
+                img_resized = cv2.resize(img, (100, 100))
+
+                X_test = []
+                X_test.append(img_resized)
+                X_test = np.array(X_test) / 255
+                prediction = predict(X_test)
+
+                self.assertEqual(str(prediction["categorie"][0]), expected_categories[i],
+                                 f"Category prediction is wrong for image {i}. Expected {expected_categories[i]} but got {str(prediction['categorie'][0])}")
+
+                self.assertEqual(str(prediction["maladie_pred"][0]), expected_diseases[i],
+                                 f"Disease prediction is wrong for image {i}. Expected {expected_diseases[i]} but got {str(prediction['maladie_pred'][0])}")
 
 
 ##########
