@@ -99,6 +99,7 @@ class TestImage(unittest.TestCase):
             X_test = np.array(X_test) / 255
             prediction_0 = predict(X_test)
 
+            print("list keys of dictionary : ",list(prediction_0.keys()))
 
             #print("==> Prediction : " + str(prediction_0.iloc[0, 0]) +
             #       " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
