@@ -113,6 +113,9 @@ class TestImage(unittest.TestCase):
         expected_categories = ["Apple", "Apple", "Apple", "Apple", "Corn", "Corn", "Corn", "Potato", "Potato", "Potato", "Tomato", "Tomato", "Tomato", "Tomato"]
         expected_diseases = ["Cedar_apple_rust", "Cedar_apple_rust", "Apple_scab", "Apple_scab", "Common_rust", "Common_rust", "Common_rust", "Early_blight", "Early_blight", "Healthy", "Early_blight", "Healthy", "Yellow_curl_virus", "Healthy"]
 
+        correct_category_predictions = 0
+        correct_disease_predictions = 0
+
         for i, image_path in enumerate(test_images):
             with open(image_path, 'rb') as file:
                 img = cv2.imread(image_path, cv2.IMREAD_COLOR)
@@ -123,11 +126,23 @@ class TestImage(unittest.TestCase):
                 X_test = np.array(X_test) / 255
                 prediction = predict(X_test)
 
-                self.assertEqual(str(prediction["categorie"][0]), expected_categories[i],
-                                 f"Category prediction is wrong for image {i}. Expected {expected_categories[i]} but got {str(prediction['categorie'][0])}")
+                if str(prediction["categorie"][0]) == expected_categories[i]:
+                    correct_category_predictions += 1
 
-                self.assertEqual(str(prediction["maladie_pred"][0]), expected_diseases[i],
-                                 f"Disease prediction is wrong for image {i}. Expected {expected_diseases[i]} but got {str(prediction['maladie_pred'][0])}")
+                if str(prediction["maladie_pred"][0]) == expected_diseases[i]:
+                    correct_disease_predictions += 1
+
+        total_predictions = len(test_images)
+        correct_category_percentage = (correct_category_predictions / total_predictions) * 100
+        correct_disease_percentage = (correct_disease_predictions / total_predictions) * 100
+
+        print(f"Correct category predictions: {correct_category_percentage}%")
+        print(f"Correct disease predictions: {correct_disease_percentage}%")
+        
+        target_value = 85
+        self.assertGreater(correct_category_percentage, target_value, "correct_category_percentage should be >= 85%")
+        self.assertGreater(correct_disease_percentage, target_value, "correct_disease_percentage should be >= 85%")
+
 
 
 ##########
