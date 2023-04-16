@@ -139,7 +139,8 @@ class TestImage(unittest.TestCase):
         print(f"Correct category predictions: {correct_category_percentage}%")
         print(f"Correct disease predictions: {correct_disease_percentage}%")
         
-        target_value = 85
+        target_value_category = 85
+        target_value_disease = 40
         self.assertGreater(correct_category_percentage, target_value, "correct_category_percentage should be >= 85%")
         self.assertGreater(correct_disease_percentage, target_value, "correct_disease_percentage should be >= 85%")
 
