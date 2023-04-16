@@ -29,23 +29,26 @@ jobs:
         TEST_EXIT_CODE=$?
         set -e
         #echo "$EXEC_TESTS"
-        if [[ $TEST_EXIT_CODE -ne 0 ]]; then
-          echo "Unit tests failed. Skipping fail rate check."
-        fi
+        #if [[ $TEST_EXIT_CODE -ne 0 ]]; then
+        #  echo "Unit tests failed. Skipping fail rate check."
+        #fi
         TOTAL_TESTS=$(echo "$EXEC_TESTS" | grep -o "Ran [0-9]* tests" | awk '{print $2}')
-        echo  $TOTAL_TESTS
+        echo  "Total Number of Tests = $TOTAL_TESTS" 
+        
         FAILED_TESTS=$(echo "$EXEC_TESTS" | grep -oq "FAILED (failures=[0-9]*)" && echo "$EXEC_TESTS" | grep -o "FAILED (failures=[0-9]*)" | awk -F= '{print $2}' | awk -F')' '{print $1}' || echo "0")
-        echo $FAILED_TESTS
+        echo  "Failed Tests = $FAILED_TESTS" 
        
         FAIL_RATE=$(echo "scale=2; $FAILED_TESTS/$TOTAL_TESTS*100" | bc)
-        
+        echo  "FAIL_RATE = $FAIL_RATE" 
+
         if (( $(echo "$FAIL_RATE > 15.0" | bc -l) )); then
             echo "Less than 85% of tests passed. ($FAIL_RATE% failed). Reverting the push."
             git config --global user.email "plantspygirls@gmail.com"
             git config --global user.name "PlantSpy"
-            git fetch
-            git revert HEAD
-            git push
+            #git fetch
+            #git revert HEAD
+            #git push
+            exit 1
         else
             echo "85% or more of tests passed. (Failure rate = $FAIL_RATE% failed)"
         fi
