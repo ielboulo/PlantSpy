@@ -110,8 +110,8 @@ class TestImage(unittest.TestCase):
                           f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0['maladie_pred'][0])}")
 
     def test_image_prediction_2(self):
-        expected_categories = ["Apple", "Apple", "Apple", "Apple", "Corn", "Corn", "Corn", "Potato", "Potato", "Potato", "Tomato", "Tomato", "Tomato", "Tomato"]
-        expected_diseases = ["Cedar_apple_rust", "Cedar_apple_rust", "Apple_scab", "Apple_scab", "Common_rust", "Common_rust", "Common_rust", "Early_blight", "Early_blight", "Healthy", "Early_blight", "Healthy", "Yellow_curl_virus", "Healthy"]
+        expected_categories = ["Apple", "Apple", "Apple", "Apple", "Corn", "Corn", "Corn", "Potato", "Potato", "Potato", "Potato", "Tomato", "Tomato", "Tomato", "Tomato"]
+        expected_diseases = ["Cedar_apple_rust", "Cedar_apple_rust", "Apple_scab", "Apple_scab", "Common_rust", "Common_rust", "Common_rust", "Early_blight", "Early_blight", "Healthy", "Healthy", "Early_blight", "Healthy", "Yellow_curl_virus", "Healthy"]
 
         correct_category_predictions = 0
         correct_disease_predictions = 0
@@ -125,7 +125,7 @@ class TestImage(unittest.TestCase):
                 X_test.append(img_resized)
                 X_test = np.array(X_test) / 255
                 prediction = predict(X_test)
-
+                print(" index ", i , " predicted categorie ", str(prediction["categorie"][0]) , " expected = ", expected_categories[i])
                 if str(prediction["categorie"][0]) == expected_categories[i]:
                     correct_category_predictions += 1
 
