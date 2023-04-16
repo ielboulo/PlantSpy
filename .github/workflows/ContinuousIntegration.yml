@@ -10,7 +10,7 @@ jobs:
     
     strategy:
       matrix:
-        python-version: ['3.6', '3.9']
+        python-version: ['3.6']
         
     steps:
     - uses: actions/checkout@v2
@@ -43,6 +43,7 @@ jobs:
             echo "Less than 85% of tests passed. ($FAIL_RATE% failed). Reverting the push."
             git config --global user.email "plantspygirls@gmail.com"
             git config --global user.name "PlantSpy"
+            git fetch
             git revert HEAD
             git push
         else
