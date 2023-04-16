@@ -124,8 +124,11 @@ class TestImage(unittest.TestCase):
                 X_test = []
                 X_test.append(img_resized)
                 X_test = np.array(X_test) / 255
-                prediction = predict(X_test)
+                
+                prediction = predict(X_test)    
                 print(" index ", i , " predicted categorie ", str(prediction["categorie"][0]) , " expected = ", expected_categories[i])
+                print(" index ", i , " predicted maladie ", str(prediction["maladie_pred"][0]) , " expected = ", expected_diseases[i])
+
                 if str(prediction["categorie"][0]) == expected_categories[i]:
                     correct_category_predictions += 1
 
@@ -141,8 +144,8 @@ class TestImage(unittest.TestCase):
         
         target_value_category = 85
         target_value_disease = 40
-        self.assertGreater(correct_category_percentage, target_value, "correct_category_percentage should be >= 85%")
-        self.assertGreater(correct_disease_percentage, target_value, "correct_disease_percentage should be >= 85%")
+        self.assertGreater(correct_category_percentage, target_value_category, "correct_category_percentage should be >= 85%")
+        self.assertGreater(correct_disease_percentage, target_value_disease, "correct_disease_percentage should be >= 85%")
 
 
 
