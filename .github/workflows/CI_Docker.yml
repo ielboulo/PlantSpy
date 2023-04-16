@@ -1,0 +1,59 @@
+name:  Build and Run Docker PlantSpy + Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_run_docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup Docker
+      run: |
+        #sudo apt-get update # IEL : is it necessary all time ? : generates conflict between packages 
+        #sudo apt-get install -y docker.io
+        #sudo apt-get update
+        #sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+        #sudo docker run hello-world
+        sudo apt-get update
+        sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install docker-ce docker-ce-cli containerd.io
+        
+    - name : Install  docker-buildx plugin
+      run: |
+        DOCKER_BUILDX_VERSION="v0.10.4"
+        BUILDX_DOWNLOAD_URL="https://github.com/docker/buildx/releases/download/$DOCKER_BUILDX_VERSION/buildx-$DOCKER_BUILDX_VERSION.linux-amd64"
+        sudo curl -L $BUILDX_DOWNLOAD_URL -o /usr/local/bin/docker-buildx
+        sudo chmod a+x /usr/local/bin/docker-buildx
+        
+    - name : Install  docker-compose 
+      run: |
+        sudo rm /usr/local/bin/docker-compose
+        DOCKER_COMPOSE_VERSION="v2.17.2" # Remplacez par la version souhaitée
+        COMPOSE_DOWNLOAD_URL="https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-linux-x86_64"
+        sudo curl -L $COMPOSE_DOWNLOAD_URL -o /usr/local/bin/docker-compose
+        sudo chmod a+x /usr/local/bin/docker-compose
+
+    - name: Set volume path
+      run: |
+        if [ "${{ github.event_name }}" = "push" ]; then
+          echo "VOLUME_PATH=$GITHUB_WORKSPACE/mlpos/api_mlops/images/" >> $GITHUB_ENV
+        else
+          echo "VOLUME_PATH=/home/api_mlops/images/" >> $GITHUB_ENV
+        fi
+
+    - name: Build and Run docker compose 
+      run: |        
+        #echo "Construction de l'image docker authentication"
+        sudo docker build . -f Dockerfile_plantspy -t test_plantspy:latest
+
+        #echo "Lancement docker-compose"
+        sudo docker-compose up -d
