@@ -100,15 +100,22 @@ class TestImage(unittest.TestCase):
             prediction_0 = predict(X_test)
 
             print("list keys of dictionary : ",list(prediction_0.keys()))
-
+            #list keys of dictionary :  ['categorie', 'confiance_categorie', 'maladie_pred', 'confiance']
+            # Assuming that prediction_0 dictionary has keys "category" and "disease"
+            self.assertEqual(str(prediction_0["categorie"]), "Apple",
+                          f"Category prediction is wrong. Expected Apple but got {str(prediction_0['category'])}")
+            self.assertEqual(str(prediction_0["maladie_pred"]), "Cedar_apple_rust",
+                          f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0['disease'])}")
+            
+            #Old :
             #print("==> Prediction : " + str(prediction_0.iloc[0, 0]) +
             #       " for " + str(round(prediction_0.iloc[0, 1] * 100, 2)) +"% and as " +
             #       str(prediction_0.iloc[0, 2]) + " for " + str(round(prediction_0.iloc[0, 3] * 100, 2)) + "%")
 
-            self.assertEqual(str(prediction_0.iloc[0, 0]), "Apple",
-                              f"Category prediction is wrong. Expected Apple but got {str(prediction_0.iloc[0, 0])}")
-            self.assertEqual(str(prediction_0.iloc[0, 2]), "Cedar_apple_rust",
-                              f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0.iloc[0, 2])}")
+            #self.assertEqual(str(prediction_0.iloc[0, 0]), "Apple",
+            #                  f"Category prediction is wrong. Expected Apple but got {str(prediction_0.iloc[0, 0])}")
+            #self.assertEqual(str(prediction_0.iloc[0, 2]), "Cedar_apple_rust",
+            #                  f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0.iloc[0, 2])}")
 
 
 ##########
