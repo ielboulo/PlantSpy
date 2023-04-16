@@ -14,6 +14,8 @@ jobs:
         
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v2
@@ -45,9 +47,9 @@ jobs:
             echo "Less than 85% of tests passed. ($FAIL_RATE% failed). Reverting the push."
             git config --global user.email "plantspygirls@gmail.com"
             git config --global user.name "PlantSpy"
-            #git fetch
-            #git revert HEAD
-            #git push
+            git fetch
+            git revert HEAD
+            git push
             exit 1
         else
             echo "85% or more of tests passed. (Failure rate = $FAIL_RATE% failed)"
