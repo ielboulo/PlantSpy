@@ -44,6 +44,7 @@ jobs:
             git config --global user.email "plantspygirls@gmail.com"
             git config --global user.name "PlantSpy"
             git revert HEAD
+            git push
         else
             echo "85% or more of tests passed. (Failure rate = $FAIL_RATE% failed)"
         fi
