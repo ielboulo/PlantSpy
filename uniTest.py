@@ -110,7 +110,7 @@ class TestImage(unittest.TestCase):
                           f"Category prediction is wrong. Expected Cedar_apple_rust but got {str(prediction_0['maladie_pred'][0])}")
 
     def test_image_prediction_2(self):
-        expected_categories = ["Appleee", "Apple", "Apple", "Apple", "Corn", "Corn", "Corn", "Potato", "Potato", "Potato", "Potato", "Tomato", "Tomato", "Tomato", "Tomato"]
+        expected_categories = ["Appleee", "Appleeee", "Appleeee", "Appleeee", "Corneee", "Corneeee", "eeeeCorn", "Potato", "Potato", "Potato", "Potato", "Tomato", "Tomato", "Tomato", "Tomato"]
         expected_diseases = ["Cedar_apple_rust", "Cedar_apple_rust", "Apple_scab", "Apple_scab", "Common_rust", "Common_rust", "Common_rust", "Early_blight", "Early_blight", "Healthy", "Healthy", "Early_blight", "Healthy", "Yellow_curl_virus", "Healthy"]
 
         correct_category_predictions = 0
