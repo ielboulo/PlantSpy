@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build the Docker image
-        run: docker build . --file Dockerfile_plantspy --tag ${{ secrets.DOCKER_HUB_USERNAME }}/mlops_plantspy
+        run: docker build . --file Dockerfile_plantspy --tag ${{ secrets.DOCKER_HUB_USERNAME }}/mlops_plantspy:1.0.1
 
       - name: Docker Push
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/mlops_plantspy
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/mlops_plantspy:1.0.1
