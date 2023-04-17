@@ -42,10 +42,18 @@ jobs:
         sudo curl -L $COMPOSE_DOWNLOAD_URL -o /usr/local/bin/docker-compose
         sudo chmod a+x /usr/local/bin/docker-compose
 
+    #- name: Set volume path
+     # run: |
+     #   if [ "${{ github.event_name }}" = "push" ]; then
+     #     echo "VOLUME_PATH=$GITHUB_WORKSPACE/mlpos/api_mlops/images/" >> $GITHUB_ENV
+     #   else
+     #     echo "VOLUME_PATH=/home/api_mlops/images/" >> $GITHUB_ENV
+     #   fi
+     
     - name: Set volume path
       run: |
         if [ "${{ github.event_name }}" = "push" ]; then
-          echo "VOLUME_PATH=$GITHUB_WORKSPACE/mlpos/api_mlops/images/" >> $GITHUB_ENV
+          echo "VOLUME_PATH=$GITHUB_WORKSPACE/Models/NewPlantDiseasesDataset/test/test" >> $GITHUB_ENV
         else
           echo "VOLUME_PATH=/home/api_mlops/images/" >> $GITHUB_ENV
         fi
@@ -57,6 +65,13 @@ jobs:
 
         #echo "Lancement docker-compose"
         sudo docker-compose up -d
+        
     - name: Display Docker Compose logs
       run: |
-        sudo docker-compose logs test_plantspy
+        sudo docker-compose logs > docker-compose.log
+        
+    - name: Upload docker-compose logs
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-compose-logs
+        path: ./docker-compose.log
