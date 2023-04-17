@@ -1,4 +1,4 @@
-name:  Build and Run Docker PlantSpy + Tests
+name:  Build and Run Docker PlantSpy API + Tests
 
 on:
   push:
