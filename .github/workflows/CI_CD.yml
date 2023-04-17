@@ -1,0 +1,133 @@
+name: Continuous Integration & Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+# Step 1: Unit Test - Model Directly 
+
+  test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run Unit Tests
+        run: |
+          #python uniTest.py
+          set +e
+          EXEC_TESTS=$(python uniTest.py 2>&1)
+          TEST_EXIT_CODE=$?
+          set -e
+          #echo "$EXEC_TESTS"
+          #if [[ $TEST_EXIT_CODE -ne 0 ]]; then
+          #  echo "Unit tests failed. Skipping fail rate check."
+          #fi
+          TOTAL_TESTS=$(echo "$EXEC_TESTS" | grep -o "Ran [0-9]* tests" | awk '{print $2}')
+          echo  "Total Number of Tests = $TOTAL_TESTS" 
+
+          FAILED_TESTS=$(echo "$EXEC_TESTS" | grep -oq "FAILED (failures=[0-9]*)" && echo "$EXEC_TESTS" | grep -o "FAILED (failures=[0-9]*)" | awk -F= '{print $2}' | awk -F')' '{print $1}' || echo "0")
+          echo  "Failed Tests = $FAILED_TESTS" 
+
+          FAIL_RATE=$(echo "scale=2; $FAILED_TESTS/$TOTAL_TESTS*100" | bc)
+          echo  "FAIL_RATE = $FAIL_RATE" 
+          if (( $(echo "$FAIL_RATE > 15.0" | bc -l) )); then
+              echo "Less than 85% of tests passed. ($FAIL_RATE% failed). Reverting the push."
+              git config --global user.email "plantspygirls@gmail.com"
+              git config --global user.name "PlantSpy"
+              git fetch
+              git revert HEAD
+              git push
+              exit 1
+          else
+              echo "85% or more of tests passed. (Failure rate = $FAIL_RATE% failed)"
+
+
+# Step 2: Test API via Docker 
+
+  build_and_run_docker:
+    name: Build and Run Docker PlantSpy API + Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install docker-ce docker-ce-cli containerd.io
+      - name : Install docker-buildx plugin
+        run: |
+          DOCKER_BUILDX_VERSION="v0.10.4"
+          BUILDX_DOWNLOAD_URL="https://github.com/docker/buildx/releases/download/$DOCKER_BUILDX_VERSION/buildx-$DOCKER_BUILDX_VERSION.linux-amd64"
+          sudo curl -L $BUILDX_DOWNLOAD_URL -o /usr/local/bin/docker-buildx
+          sudo chmod a+x /usr/local/bin/docker-buildx
+        
+    - name : Install  docker-compose 
+      run: |
+        sudo rm /usr/local/bin/docker-compose
+        DOCKER_COMPOSE_VERSION="v2.17.2" # Remplacez par la version souhaitée
+        COMPOSE_DOWNLOAD_URL="https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-linux-x86_64"
+        sudo curl -L $COMPOSE_DOWNLOAD_URL -o /usr/local/bin/docker-compose
+        sudo chmod a+x /usr/local/bin/docker-compose
+    #- name: Set volume path
+     # run: |
+     #   if [ "${{ github.event_name }}" = "push" ]; then
+     #     echo "VOLUME_PATH=$GITHUB_WORKSPACE/mlpos/api_mlops/images/" >> $GITHUB_ENV
+     #   else
+     #     echo "VOLUME_PATH=/home/api_mlops/images/" >> $GITHUB_ENV
+     #   fi
+     
+    - name: Set volume path
+      run: |
+        if [ "${{ github.event_name }}" = "push" ]; then
+          echo "VOLUME_PATH=$GITHUB_WORKSPACE/Models/NewPlantDiseasesDataset/test/test" >> $GITHUB_ENV
+        else
+          echo "VOLUME_PATH=/home/api_mlops/images/" >> $GITHUB_ENV
+        fi
+    - name: Build and Run docker compose 
+      run: |        
+        #echo "Construction de l'image docker authentication"
+        sudo docker build . -f Dockerfile_plantspy -t test_plantspy:latest
+        #echo "Lancement docker-compose"
+        sudo docker-compose up -d
+        
+    - name: Display Docker Compose logs
+      run: |
+        docker-compose logs > docker-compose.log
+        cat docker-compose.log
+        
+    - name: Upload docker-compose logs
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-compose-logs
+        path: ./docker-compose.log
+
+# Step 3: DEPLOYMENT 
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [test, build_and_run_docker]
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile_plantspy --tag ${{ secrets.DOCKER_HUB_USERNAME }}/mlops_plantspy:1.0.1
+
+      - name: Docker Push
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/mlops_plantspy:1.0.1
+
