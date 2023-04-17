@@ -47,7 +47,8 @@ jobs:
               exit 1
           else
               echo "85% or more of tests passed. (Failure rate = $FAIL_RATE% failed)"
-
+          fi
+          
 
 # Step 2: Test API via Docker 
 
