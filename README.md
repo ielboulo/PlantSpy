@@ -31,6 +31,8 @@ Sur l'API, on donne les fonctionnalités suivantes à l'utilisateur :
 ## 3-BDD
 ![image](https://user-images.githubusercontent.com/83654862/229581122-d0a0ebac-f3c0-4444-9dcd-7d3960685348.png)
 Les utilisateurs ayant le droit de ce connecter à l'API sont stockées sur une base de données MongoDb
+Schema de la table user: ![image](https://user-images.githubusercontent.com/83654862/232719568-b34084d3-9719-49bf-a7a0-d29634d3e300.png)
+
 
 ## 4-Sécurisation API & Rôles
 La sécurité de l'API est d'abord assuré par la gestion des entêtes CORS (Cross-Origin Resource Sharing). La méthode de sécurisation pour l'authentification et les autorisations est Oauth2
