@@ -1,0 +1,1 @@
+docker run -p 5000:8080 -v /home/ubuntu/dashboard:/var/www/html -v /home/ubuntu/api_mlops/images:/var/www/html/data -v /home/ubuntu/airflow/results:/var/www/html/results trafex/php-nginx
