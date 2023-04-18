@@ -106,6 +106,8 @@ services:
     command: webserver
     ports:
       - 8080:8080
+    volumes:
+      - ./static:/opt/airflow/static
     healthcheck:
       test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
       interval: 10s
@@ -167,7 +169,18 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+  
+  dashboard:
+    image: trafex/php-nginx:latest
+    container_name: dashboard
+    ports:
+      - 5000:8080
+    volumes:
+      - /home/ubuntu/dashboard:/var/www/html
+      - /home/ubuntu/api_mlops/images:/var/www/html/data
+      - /home/ubuntu/airflow/results:/var/www/html/results
+  
+  
 
 volumes:
   postgres-db-volume:
-
