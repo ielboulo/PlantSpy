@@ -49,7 +49,7 @@ D'autres tests unitaires seront à implémenter afin de tester fonctionnellement
 ## 6-Dockerisation de l'API et de la BDD
 L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isolé dans son propre container.
 
-## 7-Testing & Monitoring
+## 7-Pipeline Airflow
 
 Le fichier **docker-compose.yml** dans le dossier **airflow** définit un environnement de développement local pour Airflow, avec un serveur web, un planificateur, des workers Celery, une base de données PostgreSQL, un serveur Redis et un tableau de bord.
 
