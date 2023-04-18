@@ -110,11 +110,13 @@ https://hub.docker.com/layers/ilham8823/mlops_plantspy/1.0.1/images/sha256-a4e77
 <img width="1274" alt="Capture d’écran 2023-04-18 à 07 51 17" src="https://user-images.githubusercontent.com/46560616/232683308-e400e04a-11e0-45ea-9e54-ecd4dd99f565.png">
 
 
+## 9-Monitoring
+ Le monitoring dans le contexte de MLOps est important pour s’assurer que les modèles d’apprentissage automatique en production continuent de fonctionner correctement et de fournir des résultats précis. Le monitoring peut inclure la surveillance des performances du modèle, la détection des dérives des données et la gestion des erreurs. Nous nous sommes concentrer sur les 2 premiers cas.
+ ![image](https://user-images.githubusercontent.com/83654862/232754681-f8f85e79-d9f6-4c90-82f6-0752de304142.png)
 
 
 
-
-## 9-Web Apps
+## 10-Web Apps
 ![image](https://user-images.githubusercontent.com/55795871/229562421-7c00fdda-4f8a-4d82-9899-9cca19bc110e.png)
 ![image](https://user-images.githubusercontent.com/55795871/229562489-0ac0545a-dcf4-47da-ad60-66966f35da89.png)
 Afin de facilité l'utilisation de notre API, une interface web front-end est mise en place. 
