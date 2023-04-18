@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '!README.md'
+      - '!Annexe/**'
 
 jobs:
 
@@ -12,12 +15,22 @@ jobs:
   test:
     name: Run unit tests
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.6']
+
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v2
+        
       - name: Install dependencies
         run: pip install -r requirements.txt
+        
       - name: Run Unit Tests
         run: |
           #python uniTest.py
@@ -25,10 +38,6 @@ jobs:
           EXEC_TESTS=$(python uniTest.py 2>&1)
           TEST_EXIT_CODE=$?
           set -e
-          #echo "$EXEC_TESTS"
-          #if [[ $TEST_EXIT_CODE -ne 0 ]]; then
-          #  echo "Unit tests failed. Skipping fail rate check."
-          #fi
           TOTAL_TESTS=$(echo "$EXEC_TESTS" | grep -o "Ran [0-9]* tests" | awk '{print $2}')
           echo  "Total Number of Tests = $TOTAL_TESTS" 
 
