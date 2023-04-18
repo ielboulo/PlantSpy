@@ -42,9 +42,12 @@ Différents rôles possible pour les utilisateurs :
 
 ## 4-Sécurisation API & Rôles
 La sécurité de l'API est d'abord assuré par la gestion des entêtes CORS (Cross-Origin Resource Sharing). La méthode de sécurisation pour l'authentification et les autorisations est Oauth2
-![image](https://user-images.githubusercontent.com/83654862/229582928-ace83cf9-c8a5-4248-bd80-e3c25aec85f8.png)
-### 4-1 CORS
+
+   ### 4-1 CORS
 CORS (Cross-Origin Resource Sharing) est un mécanisme basé sur les en-têtes HTTP qui permet à un serveur d’indiquer les origines (domaine, schéma ou port) autres que les siennes à partir desquelles un navigateur doit autoriser le chargement de ressources. FastAPI fournit un middleware CORS pour gérer ces situations. Nous avons configuré CORS dans notre application FastAPI en utilisant CORSMiddleware
+  ### 4-2 Oauth2
+  ![image](https://user-images.githubusercontent.com/83654862/229582928-ace83cf9-c8a5-4248-bd80-e3c25aec85f8.png)
+  OAuth 2.0 est un cadre d’autorisation qui permet aux applications d’obtenir un accès limité aux comptes utilisateur sur un service HTTP1. Il fonctionne en déléguant l’authentification de l’utilisateur au service qui héberge le compte utilisateur et en autorisant les applications tierces à accéder à ce compte utilisateur
 
 
 ## 5-Test Unitaires
