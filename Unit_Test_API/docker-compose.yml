@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  ds_fastapi:
+    image: datascientest/fastapi:1.0.0
+    container_name: ds_fastapi
+    networks:
+      - test_network
+    ports:
+      - "8000:8000"
+
+  test_unit_api:
+    image: test_unit_api
+    container_name: test_unit_api
+    networks:
+      - test_network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /home/ubuntu/docker_exam/test_logs/:/test_logs/
+    environment: 
+      LOG: "1"
+    depends_on:
+      - ds_fastapi
+
+
+networks:
+  test_network:
