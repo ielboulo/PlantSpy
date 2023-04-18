@@ -53,6 +53,9 @@ CORS (Cross-Origin Resource Sharing) est un mécanisme basé sur les en-têtes H
   OAuth 2.0 est un cadre d’autorisation qui permet aux applications d’obtenir un accès limité aux comptes utilisateur sur un service HTTP1. Il fonctionne en déléguant l’authentification de l’utilisateur au service qui héberge le compte utilisateur et en autorisant les applications tierces à accéder à ce compte utilisateur
 
 
+## 7-Dockerisation de l'API et de la BDD
+L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isolé dans son propre container.
+
 ## 5-Test Unitaires
 ![image](https://user-images.githubusercontent.com/55795871/229561394-c865cc90-1fec-4bb6-a99b-4ff5700d6d82.png)
 ### 5-1-Tests Unitaires du modèle :
@@ -88,9 +91,6 @@ https://hub.docker.com/layers/ilham8823/mlops_plantspy/1.0.1/images/sha256-a4e77
 
 <img width="1274" alt="Capture d’écran 2023-04-18 à 07 51 17" src="https://user-images.githubusercontent.com/46560616/232683308-e400e04a-11e0-45ea-9e54-ecd4dd99f565.png">
 
-
-## 7-Dockerisation de l'API et de la BDD
-L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isolé dans son propre container.
 
 ## 8-Pipeline Airflow
 
