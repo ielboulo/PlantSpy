@@ -53,11 +53,12 @@ L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isol
 
 Le fichier **docker-compose.yml** dans le dossier **airflow** définit un environnement de développement local pour Airflow, avec un serveur web, un planificateur, des workers Celery, une base de données PostgreSQL, un serveur Redis et un tableau de bord.
 
-![image](https://user-images.githubusercontent.com/83654862/232091092-700ce203-6880-4dbf-b916-082e1155d419.png)
-
-ce projet MLOps met en œuvre un pipeline complet pour la classification des plantes en utilisant des images. Le pipeline comprend des étapes de prétraitement des données, d'entraînement et d'évaluation des modèles, ainsi que de comparaison et de sélection des modèles pour la production. Le pipeline est géré à l'aide d'Airflow pour assurer une exécution efficace et automatisée des tâches.
+Ce projet MLOps met en œuvre un pipeline complet pour la classification des plantes en utilisant des images. Le pipeline comprend des étapes de prétraitement des données, d'entraînement et d'évaluation des modèles, ainsi que de comparaison et de sélection des modèles pour la production. Le pipeline est géré à l'aide d'Airflow pour assurer une exécution efficace et automatisée des tâches.
 
 Les tâches suivantes sont définies dans le pipeline :
+
+![image](https://user-images.githubusercontent.com/83654862/232091092-700ce203-6880-4dbf-b916-082e1155d419.png)
+
 
 - **load_model_task** : chargement du modèle en production
 - **load_images_task** : chargement des images de test
