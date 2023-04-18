@@ -50,10 +50,21 @@ D'autres tests unitaires seront à implémenter afin de tester fonctionnellement
 L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isolé dans son propre container.
 
 ## 7-Testing & Monitoring
-![image](https://user-images.githubusercontent.com/83654862/232091092-700ce203-6880-4dbf-b916-082e1155d419.png)Airflow nous permet de Monitorer de façon périodique l’évolution du projet :
-- Assurer le maintien des performances grâce à la surveillance des métriques d’alerte
-- Tracker les paramètres et alerter des déviations des performances
-- réentrainement périodique du modèle à partir de toutes les données, y compris les nouvelles
+![image](https://user-images.githubusercontent.com/83654862/232091092-700ce203-6880-4dbf-b916-082e1155d419.png)
+ce projet MLOps met en œuvre un pipeline complet pour la classification des plantes en utilisant des images. Le pipeline comprend des étapes de prétraitement des données, d'entraînement et d'évaluation des modèles, ainsi que de comparaison et de sélection des modèles pour la production. Le pipeline est géré à l'aide d'Airflow pour assurer une exécution efficace et automatisée des tâches.
+
+Les tâches suivantes sont définies dans le pipeline :
+
+load_model_task : chargement du modèle en production
+load_images_task : chargement des images de test
+predict_task : prédiction des catégories à l'aide du modèle en production
+predict_new_train_task : prédiction des catégories à l'aide du nouveau modèle entraîné
+calculate_accuracy_new_train_task : calcul de la précision du nouveau modèle entraîné
+save_predictions_task : sauvegarde des prédictions du modèle en production dans un fichier CSV
+save_predictions_train_task : sauvegarde des prédictions du nouveau modèle entraîné dans un fichier CSV
+calculate_accuracy_task : calcul de la précision du modèle en production
+periodic_training_task : entraînement périodique du modèle
+choix_modele_task : choix du meilleur modèle entre le modèle en production et le modèle nouvellement entraîné
 
 
 ## 8-CI/CD
