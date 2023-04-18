@@ -64,10 +64,22 @@ En effet, on implémenté le workflow suivant :
 - Aprés chaque push, lancer automatiquement les tests unitaires
 - Vérifier la stabilité des modèles.
 - Vérifier la stabilité de l'authentification à l'application.
-- Vérifier la stabilité de l'application FastAPI
-On vérifie cette stabilité via le nombre de tests réussis. Un seuil de 80% de réussite est exigé.
+- Vérifier la stabilité de l'application FastAPI.
+On vérifie cette stabilité via le nombre de tests réussis. Un seuil de 85% de réussite est exigé.
+
+<img width="1020" alt="Capture d’écran 2023-04-18 à 07 47 49" src="https://user-images.githubusercontent.com/46560616/232683145-37679e9e-46c3-409e-b968-3c5c4c06a92f.png">
 
 Si le nombre de tests réussis est en dessous du seuil exigé, on revert le dernier commit sur le main du repo GitHub.
+
+Si tous les tests s'exécutent en respectant le seuil minimal de succés, un job automatique de déploiement est lancé pour générer une image docker de notre application sur Docker Hub :
+
+https://hub.docker.com/layers/ilham8823/mlops_plantspy/1.0.1/images/sha256-a4e778379060a98d2dad27f4ccc22b1e0ad830d3cd9a5bc9ddcad65f92b7a7a5?context=repo
+
+<img width="1274" alt="Capture d’écran 2023-04-18 à 07 51 17" src="https://user-images.githubusercontent.com/46560616/232683308-e400e04a-11e0-45ea-9e54-ecd4dd99f565.png">
+
+
+
+
 
 
 ## 9-Web Apps
