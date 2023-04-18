@@ -32,6 +32,12 @@ Sur l'API, on donne les fonctionnalités suivantes à l'utilisateur :
 ![image](https://user-images.githubusercontent.com/83654862/229581122-d0a0ebac-f3c0-4444-9dcd-7d3960685348.png)
 Les utilisateurs ayant le droit de ce connecter à l'API sont stockées sur une base de données MongoDb
 Schema de la table user: ![image](https://user-images.githubusercontent.com/83654862/232719568-b34084d3-9719-49bf-a7a0-d29634d3e300.png)
+Différents rôles possible pour les utilisateurs : 
+- 1- admin, en tant qu'administrateur, il pourra ajouter ou supprimer des utilisateurs (fonctionnalité non implémenteée). 
+- 2- categorie, avec ce rôle, on peut acceder au service de prédiction de la catégorie d'une image via URL ou fichier uploadé. 
+- 3- santé, avec ce rôle il est possible de prédire l'état de santé de la plante à partir d'une image uploadé ou via URL. 
+- 4- maladie, avec ce rôle il est possible de prédire, le cas échéant,le nom de la maladie de la plante à partir d'une image uploadé ou via URL.
+- 5- stockage, avec ce rôle il est possible d'enrichir les images pour le réentrainement
 
 
 ## 4-Sécurisation API & Rôles
