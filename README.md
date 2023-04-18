@@ -2,9 +2,12 @@
 PlantSpy is an AI tool (Deep Learning) allowing to detect the category of a plant, its health and its eventual sickness name.
 <img src="https://i.imgur.com/Oln0kaH.png"/>
 
+<img width="952" alt="Capture d’écran 2023-04-18 à 07 17 38" src="https://user-images.githubusercontent.com/46560616/232679493-37c8a66d-7652-4556-9ee6-5ce1f6670e92.png">
+
 ## 1-Présentation :
 
 L'objet de ce projet est, à partir du modèle de machine learning précédent , de déployer une API qui propose à des tiers des services et de maintenir les modèles d’apprentissage automatique en production de manière fiable et efficace.
+
 
 ## 2-API
 ![image](https://user-images.githubusercontent.com/83654862/229580127-42a99964-4721-49e0-9c04-46802b78365a.png)
