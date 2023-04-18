@@ -60,16 +60,16 @@ Les tâches suivantes sont définies dans le pipeline :
 ![image](https://user-images.githubusercontent.com/83654862/232091092-700ce203-6880-4dbf-b916-082e1155d419.png)
 
 
-- **load_model_task** : chargement du modèle en production
-- **load_images_task** : chargement des images de test
+- **load_model_production** : chargement du modèle en production
+- **load_images_test** : chargement des images de test
+- **a_periodic_training** : entraînement périodique du modèle
 - **predict_task** : prédiction des catégories à l'aide du modèle en production
 - **predict_new_train_task** : prédiction des catégories à l'aide du nouveau modèle entraîné
-- **calculate_accuracy_new_train_task** : calcul de la précision du nouveau modèle entraîné
-- **save_predictions_task** : sauvegarde des prédictions du modèle en production dans un fichier CSV
-- **save_predictions_train_task** : sauvegarde des prédictions du nouveau modèle entraîné dans un fichier CSV
-- **calculate_accuracy_task** : calcul de la précision du modèle en production
-- **periodic_training_task** : entraînement périodique du modèle
-- **choix_modele_task** : choix du meilleur modèle entre le modèle en production et le modèle nouvellement entraîné
+- **save_predictions** : sauvegarde des prédictions du modèle en production dans un fichier CSV
+- **save_predictions_train** : sauvegarde des prédictions du nouveau modèle entraîné dans un fichier CSV
+- **calculate_accuracy** : calcul de la précision du modèle en production
+- **calculate_accuracy_new_train** : calcul de la précision du nouveau modèle entraîné
+- **choix_modele** : choix du meilleur modèle entre le modèle en production et le modèle nouvellement entraîné
 
 
 ## 8-CI/CD
