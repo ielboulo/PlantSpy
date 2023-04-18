@@ -55,16 +55,16 @@ ce projet MLOps met en œuvre un pipeline complet pour la classification des pla
 
 Les tâches suivantes sont définies dans le pipeline :
 
-- <u>load_model_task :</u> chargement du modèle en production
-- <u>load_images_task :</u> chargement des images de test
-- <u>predict_task :</u> prédiction des catégories à l'aide du modèle en production
-- <u>predict_new_train_task :</u> prédiction des catégories à l'aide du nouveau modèle entraîné
-- <u>calculate_accuracy_new_train_task :</u> calcul de la précision du nouveau modèle entraîné
-- <u>save_predictions_task :</u> sauvegarde des prédictions du modèle en production dans un fichier CSV
-- <u>save_predictions_train_task :</u> sauvegarde des prédictions du nouveau modèle entraîné dans un fichier CSV
-- <u>calculate_accuracy_task :</u> calcul de la précision du modèle en production
-- <u>periodic_training_task :</u> entraînement périodique du modèle
-- <u>choix_modele_task :</u> choix du meilleur modèle entre le modèle en production et le modèle nouvellement entraîné
+- load_model_task : chargement du modèle en production
+- load_images_task : chargement des images de test
+- predict_task : prédiction des catégories à l'aide du modèle en production
+- predict_new_train_task : prédiction des catégories à l'aide du nouveau modèle entraîné
+- calculate_accuracy_new_train_task : calcul de la précision du nouveau modèle entraîné
+- save_predictions_task : sauvegarde des prédictions du modèle en production dans un fichier CSV
+- save_predictions_train_task : sauvegarde des prédictions du nouveau modèle entraîné dans un fichier CSV
+- calculate_accuracy_task : calcul de la précision du modèle en production
+- periodic_training_task : entraînement périodique du modèle
+- choix_modele_task : choix du meilleur modèle entre le modèle en production et le modèle nouvellement entraîné
 
 
 ## 8-CI/CD
