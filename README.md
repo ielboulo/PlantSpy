@@ -59,13 +59,40 @@ CORS (Cross-Origin Resource Sharing) est un mécanisme basé sur les en-têtes H
 Le fichier uniTest.py contient les tests unitaires qui permettent de vérifier si l'éxecution du modèle de prédiction de la catégorie de la plante est bonne, ainsi que de vérifier la validité des images données comme input au modèle. 
 Ces tests unitaires actuellement s'appliquent seulement au modèle, comme première étape.
 
-### 5-2-Tests Unitaires de l'API :
-D'autres tests unitaires seront à implémenter afin de tester fonctionnellement l'API, qu'on verra par la suite.
 
-## 6-Dockerisation de l'API et de la BDD
+### 5-2-Tests Unitaires de l'API :
+D'autres tests unitaires sont implémenté afin de tester fonctionnellement l'API: 
+- Test de connectivité à l'API
+- Test de l'authentification
+- Test de l'autorisation
+- Test du retour des fonctionnalités de l'API
+
+## 6-CI/CD
+![image](https://user-images.githubusercontent.com/55795871/229562323-a1fa782c-eb96-4ec9-8fa6-a80aec23f4e2.png)
+
+Afin de valider la stabilité de notre application, une CI/CD a été mise en place via GitHub Actions. 
+En effet, on implémenté le workflow suivant :
+- Aprés chaque push, lancer automatiquement les tests unitaires
+- Vérifier la stabilité des modèles.
+- Vérifier la stabilité de l'authentification à l'application.
+- Vérifier la stabilité de l'application FastAPI.
+On vérifie cette stabilité via le nombre de tests réussis. Un seuil de 85% de réussite est exigé.
+
+<img width="1020" alt="Capture d’écran 2023-04-18 à 07 47 49" src="https://user-images.githubusercontent.com/46560616/232683145-37679e9e-46c3-409e-b968-3c5c4c06a92f.png">
+
+Si le nombre de tests réussis est en dessous du seuil exigé, on revert le dernier commit sur le main du repo GitHub.
+
+Si tous les tests s'exécutent en respectant le seuil minimal de succés, un job automatique de déploiement est lancé pour générer une image docker de notre application sur Docker Hub :
+
+https://hub.docker.com/layers/ilham8823/mlops_plantspy/1.0.1/images/sha256-a4e778379060a98d2dad27f4ccc22b1e0ad830d3cd9a5bc9ddcad65f92b7a7a5?context=repo
+
+<img width="1274" alt="Capture d’écran 2023-04-18 à 07 51 17" src="https://user-images.githubusercontent.com/46560616/232683308-e400e04a-11e0-45ea-9e54-ecd4dd99f565.png">
+
+
+## 7-Dockerisation de l'API et de la BDD
 L'API, le server Oauth2 et le bdd sont contenairisé via Docker. La Bdd est isolé dans son propre container.
 
-## 7-Pipeline Airflow
+## 8-Pipeline Airflow
 
 Le fichier **docker-compose.yml** dans le dossier **airflow** définit un environnement de développement local pour Airflow, avec un serveur web, un planificateur, des workers Celery, une base de données PostgreSQL, un serveur Redis et un tableau de bord.
 
@@ -86,28 +113,6 @@ Les tâches suivantes sont définies dans le pipeline :
 - **calculate_accuracy** : calcul de la précision du modèle en production
 - **calculate_accuracy_new_train** : calcul de la précision du nouveau modèle entraîné
 - **choix_modele** : choix du meilleur modèle entre le modèle en production et le modèle nouvellement entraîné
-
-
-## 8-CI/CD
-![image](https://user-images.githubusercontent.com/55795871/229562323-a1fa782c-eb96-4ec9-8fa6-a80aec23f4e2.png)
-
-Afin de valider la stabilité de notre application, une CI/CD a été mise en place via GitHub Actions. 
-En effet, on implémenté le workflow suivant :
-- Aprés chaque push, lancer automatiquement les tests unitaires
-- Vérifier la stabilité des modèles.
-- Vérifier la stabilité de l'authentification à l'application.
-- Vérifier la stabilité de l'application FastAPI.
-On vérifie cette stabilité via le nombre de tests réussis. Un seuil de 85% de réussite est exigé.
-
-<img width="1020" alt="Capture d’écran 2023-04-18 à 07 47 49" src="https://user-images.githubusercontent.com/46560616/232683145-37679e9e-46c3-409e-b968-3c5c4c06a92f.png">
-
-Si le nombre de tests réussis est en dessous du seuil exigé, on revert le dernier commit sur le main du repo GitHub.
-
-Si tous les tests s'exécutent en respectant le seuil minimal de succés, un job automatique de déploiement est lancé pour générer une image docker de notre application sur Docker Hub :
-
-https://hub.docker.com/layers/ilham8823/mlops_plantspy/1.0.1/images/sha256-a4e778379060a98d2dad27f4ccc22b1e0ad830d3cd9a5bc9ddcad65f92b7a7a5?context=repo
-
-<img width="1274" alt="Capture d’écran 2023-04-18 à 07 51 17" src="https://user-images.githubusercontent.com/46560616/232683308-e400e04a-11e0-45ea-9e54-ecd4dd99f565.png">
 
 
 ## 9-Monitoring
